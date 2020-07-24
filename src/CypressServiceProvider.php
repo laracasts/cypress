@@ -18,10 +18,6 @@ class CypressServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('cypress.php'),
-            ], 'config');
-
-            $this->publishes([
                 __DIR__.'/routes/cypress.php' => base_path('routes/cypress.php'),
             ]);
 
