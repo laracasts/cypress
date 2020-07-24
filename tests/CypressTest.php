@@ -6,7 +6,7 @@ use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Route;
 use Laracasts\Cypress\CypressServiceProvider;
 
-class ExampleTest extends TestCase
+class CypressTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
