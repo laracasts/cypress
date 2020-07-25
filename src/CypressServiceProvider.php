@@ -22,7 +22,7 @@ class CypressServiceProvider extends ServiceProvider
             ]);
 
             $this->commands([
-                CypressBoilerplateCommand::class
+                CypressBoilerplateCommand::class,
             ]);
         }
     }
