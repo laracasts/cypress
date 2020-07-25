@@ -23,9 +23,9 @@ Cypress.Commands.add("refreshDatabase", () => {
     });
 });
 
-Cypress.Commands.add("artisan", command => {
+Cypress.Commands.add("artisan", (command, parameters = {}) => {
     return cy.request('/__cypress__/artisan', {
-        command
+        command, parameters
     });
 });
 

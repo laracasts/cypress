@@ -29,9 +29,9 @@ class CypressController
             ->create($request->input('attributes'));
     }
 
-    public function artisan()
+    public function artisan(Request $request)
     {
-        Artisan::call(request('command'));
+        Artisan::call($request->input('command'), $request->input('parameters'));
     }
 
     protected function userClassName()
