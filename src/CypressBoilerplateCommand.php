@@ -15,7 +15,7 @@ class CypressBoilerplateCommand extends Command
     {
         if (! File::exists(base_path('cypress'))) {
             $this->warn(
-                <<<EOT
+                <<<'EOT'
 
                 Cypress not found. Please install it through npm and try again.
 
@@ -35,11 +35,11 @@ class CypressBoilerplateCommand extends Command
         File::copyDirectory(__DIR__.'/stubs/support', base_path('cypress/support'));
         File::copyDirectory(__DIR__.'/stubs/plugins', base_path('cypress/plugins'));
 
-        $this->info('Updated: ' . 'cypress/support/index.js');
-        $this->info('Updated: ' . 'cypress/plugins/index.js');
-        $this->info('Created: ' . 'cypress/plugins/swap-env.js');
-        $this->info('Created: ' . 'cypress/support/laravel-commands.js');
-        $this->info('Created: ' . 'cypress/support/assertions.js');
+        $this->info('Updated: '.'cypress/support/index.js');
+        $this->info('Updated: '.'cypress/plugins/index.js');
+        $this->info('Created: '.'cypress/plugins/swap-env.js');
+        $this->info('Created: '.'cypress/support/laravel-commands.js');
+        $this->info('Created: '.'cypress/support/assertions.js');
 
         if (! File::exists($path = base_path('.env.cypress'))) {
             File::copy(base_path('.env'), $path);
