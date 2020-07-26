@@ -15,7 +15,7 @@
 
 import './commands'
 import './laravel-commands';
-import './custom-assertions';
+import './assertions';
 
 before(() => cy.task('activateCypressEnvFile'));
 after(() => cy.task('activateLocalEnvFile'));
