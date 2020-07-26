@@ -141,7 +141,7 @@ test ('it does something', () => {
 
 ### cy.artisan()
 
-Trigger any Artisan command under the current environment for the Cypress test.
+Trigger any Artisan command under the current environment for the Cypress test. Remember to proceed options with two dashes, as usual.
 
 ```js
 test ('it can create posts through the command line', () => {
