@@ -18,9 +18,7 @@ Cypress.Commands.add("create", (model, times = 1, attributes = {}) => {
 });
 
 Cypress.Commands.add("refreshDatabase", () => {
-    return cy.request('/__cypress__/artisan', {
-        command: 'migrate:fresh'
-    });
+    return cy.artisan('migrate:fresh');
 });
 
 Cypress.Commands.add("artisan", (command, parameters = {}) => {
