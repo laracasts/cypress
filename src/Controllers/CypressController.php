@@ -31,7 +31,7 @@ class CypressController
 
     public function artisan(Request $request)
     {
-        Artisan::call($request->input('command'), $request->input('parameters'));
+        Artisan::call($request->input('command'), $request->input('parameters', []));
     }
 
     protected function userClassName()
