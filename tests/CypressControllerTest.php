@@ -36,7 +36,7 @@ class CypressControllerTest extends TestCase
     public function it_logs_a_new_user_in_with_the_given_attributes()
     {
         $this->post(route('cypress.login'), [
-            'name' => 'Frank',
+            'attributes' => ['name' => 'Frank'],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'Frank']);

@@ -8,3 +8,4 @@ Route::post('/__cypress__/login', [CypressController::class, 'login'])->name('cy
 Route::post('/__cypress__/logout', [CypressController::class, 'logout'])->name('cypress.logout');
 Route::post('/__cypress__/artisan', [CypressController::class, 'artisan'])->name('cypress.artisan');
 Route::post('/__cypress__/run-php', [CypressController::class, 'runPhp'])->name('cypress.run-php');
+Route::get('/__cypress__/csrf_token', [CypressController::class, 'csrfToken'])->name('cypress.csrf-token');

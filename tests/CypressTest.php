@@ -43,6 +43,7 @@ class CypressTest extends TestCase
             'cypress.logout',
             'cypress.artisan',
             'cypress.run-php',
+            'cypress.csrf-token'
         ]);
     }
 

@@ -11,7 +11,7 @@ class CypressController
     public function login(Request $request)
     {
         $user = factory($this->userClassName())
-            ->create($request->all());
+            ->create($request->input('attributes', []));
 
         auth()->login($user);
 
