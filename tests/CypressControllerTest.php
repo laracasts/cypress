@@ -99,4 +99,24 @@ class CypressControllerTest extends TestCase
 
         $this->assertTrue($called);
     }
+
+    /** @test */
+    function it_runs_single_line_arbitrary_php()
+    {
+        $response = $this->post(route('cypress.run-php'), [
+            'command' => '2 + 3'
+        ]);
+
+        $this->assertEquals(5, $response->json()['result']);
+    }
+
+    /** @test */
+    function it_runs_multi_line_arbitrary_php()
+    {
+        $response = $this->post(route('cypress.run-php'), [
+            'command' => '$a = 2; $b = 3; return $a + $b;'
+        ]);
+
+        $this->assertEquals(5, $response->json()['result']);
+    }
 }

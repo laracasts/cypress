@@ -37,3 +37,7 @@ Cypress.Commands.add('artisan', (command, parameters = {}) => {
         parameters,
     });
 });
+
+Cypress.Commands.add('php', command => {
+    cy.request('POST', '/__cypress__/run-php', {command}).its('body.result');
+});

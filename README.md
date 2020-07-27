@@ -171,6 +171,22 @@ This call is equivalent to:
 php artisan post:make --title="My First Post"
 ```
 
+### cy.php()
+
+While not exactly in the spirit of acceptance testing, this command will allow you to trigger and evaluate arbitrary PHP.
+
+```js
+test('it can evaluate PHP', () => {
+    cy.php(`
+        App\\Plan::first();
+    `).then(plan => {
+        expect(plan.name).to.equal('Monthly'); 
+    });
+});
+```
+
+Be thoughtful when you reach for this command, but it might prove useful in instances where it's vital that you verify the state of the application or database in response to a certain action. 
+
 ### Security
 
 If you discover any security related issues, please email jeffrey@laracasts.com instead of using the issue tracker.
