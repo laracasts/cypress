@@ -1,9 +1,9 @@
 Cypress.Commands.add('login', (attributes = {}) => {
-    return cy.request('/__cypress__/login', attributes).its('body');
+    return cy.request('POST', '/__cypress__/login', attributes).its('body');
 });
 
 Cypress.Commands.add('logout', () => {
-    return cy.request('/__cypress__/logout');
+    return cy.request('POST', '/__cypress__/logout');
 });
 
 Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
@@ -13,7 +13,7 @@ Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
     }
 
     return cy
-        .request(`/__cypress__/factory`, {
+        .request('POST', `/__cypress__/factory`, {
             attributes,
             model,
             times,

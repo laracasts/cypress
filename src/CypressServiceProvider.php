@@ -30,7 +30,6 @@ class CypressServiceProvider extends ServiceProvider
     protected function addRoutes()
     {
         Route::namespace(CypressController::class)
-            ->middleware('web')
             ->group(__DIR__.'/routes/cypress.php');
     }
 }
