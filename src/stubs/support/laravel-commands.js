@@ -33,7 +33,7 @@ Cypress.Commands.add('seed', (seederClass) => {
 
 Cypress.Commands.add('artisan', (command, parameters = {}) => {
     return cy.request('POST', '/__cypress__/artisan', {
-        command: 'db:seed',
+        command: command,
         parameters,
     });
 });
