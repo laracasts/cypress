@@ -4,7 +4,6 @@ namespace Laracasts\Cypress;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Laracasts\Cypress\Controllers\CypressController;
 
 class CypressServiceProvider extends ServiceProvider
 {
