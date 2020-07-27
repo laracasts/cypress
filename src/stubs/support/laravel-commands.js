@@ -1,9 +1,30 @@
 Cypress.Commands.add('login', (attributes = {}) => {
-    return cy.request('POST', '/__cypress__/login', attributes).its('body');
+    return cy.csrfToken().then((token) => {
+        return cy.request({
+            method: 'POST',
+            url: '/__cypress__/login',
+            body: {
+                ...attributes,
+                _token: token,
+            },
+        });
+    });
 });
 
 Cypress.Commands.add('logout', () => {
-    return cy.request('POST', '/__cypress__/logout');
+    return cy.csrfToken().then((token) => {
+        return cy.request({
+            method: 'POST',
+            url: '/__cypress__/logout',
+            body: {
+                _token: token,
+            },
+        });
+    });
+});
+
+Cypress.Commands.add('csrfToken', () => {
+    return cy.request('GET', '/__cypress__/csrf_token').its('body');
 });
 
 Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
@@ -13,10 +34,18 @@ Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
     }
 
     return cy
-        .request('POST', `/__cypress__/factory`, {
-            attributes,
-            model,
-            times,
+        .csrfToken()
+        .then((token) => {
+            return cy.request({
+                method: 'POST',
+                url: '/__cypress__/factory',
+                attributes: {
+                    attributes,
+                    model,
+                    times,
+                    _token: token,
+                },
+            });
         })
         .its('body');
 });
@@ -32,12 +61,31 @@ Cypress.Commands.add('seed', (seederClass) => {
 });
 
 Cypress.Commands.add('artisan', (command, parameters = {}) => {
-    return cy.request('POST', '/__cypress__/artisan', {
-        command: command,
-        parameters,
+    return cy.csrfToken().then((token) => {
+        return cy.request({
+            method: 'POST',
+            url: '/__cypress__/artisan',
+            body: {
+                command: command,
+                parameters: parameters,
+                _token: token,
+            },
+        });
     });
 });
 
-Cypress.Commands.add('php', command => {
-    cy.request('POST', '/__cypress__/run-php', {command}).its('body.result');
+Cypress.Commands.add('php', (command) => {
+    return cy
+        .csrfToken()
+        .then((token) => {
+            return cy.request({
+                method: 'POST',
+                url: '/__cypress__/run-php',
+                body: {
+                    command: command,
+                    _token: token,
+                },
+            });
+        })
+        .its('body.result');
 });
