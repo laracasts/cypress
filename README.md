@@ -185,7 +185,8 @@ test('it can evaluate PHP', () => {
 });
 ```
 
-Be thoughtful when you reach for this command, but it might prove useful in instances where it's vital that you verify the state of the application or database in response to a certain action. 
+Be thoughtful when you reach for this command, but it might prove useful in instances where it's vital that you verify the state of the application or database in response to a certain action. It could also be used 
+for setting up the "world" for your test. That said, a targeted database seeder - using `cy.seed()` - will typically be the better approach.
 
 ### Security
 
