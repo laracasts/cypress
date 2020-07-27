@@ -4,7 +4,7 @@ Cypress.Commands.add('login', (attributes = {}) => {
             method: 'POST',
             url: '/__cypress__/login',
             body: {
-                ...attributes,
+                attributes,
                 _token: token,
             },
         });
