@@ -6,10 +6,10 @@ Cypress.Commands.add("logout", () => {
     return cy.request('/__cypress__/logout');
 });
 
-Cypress.Commands.add("create", (model, times = 1, attributes = {}) => {
+Cypress.Commands.add("create", (model, times = null, attributes = {}) => {
     if (typeof times === 'object') {
         attributes = times;
-        times = 1;
+        times = null;
     }
 
     return cy.request(`/__cypress__/factory`, {
@@ -26,5 +26,3 @@ Cypress.Commands.add("artisan", (command, parameters = {}) => {
         command, parameters
     });
 });
-
-
