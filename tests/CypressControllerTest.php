@@ -2,10 +2,10 @@
 
 namespace Laracasts\Cypress\Tests;
 
-use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Artisan;
-use Laracasts\Cypress\Tests\Support\TestUser;
 use Laracasts\Cypress\CypressServiceProvider;
+use Laracasts\Cypress\Tests\Support\TestUser;
+use Orchestra\Testbench\TestCase;
 
 class CypressControllerTest extends TestCase
 {
@@ -25,7 +25,7 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_logs_a_new_user_in()
+    public function it_logs_a_new_user_in()
     {
         $this->post(route('cypress.login'));
 
@@ -33,17 +33,17 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_logs_a_new_user_in_with_the_given_attributes()
+    public function it_logs_a_new_user_in_with_the_given_attributes()
     {
         $this->post(route('cypress.login'), [
-            'name' => 'Frank'
+            'name' => 'Frank',
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'Frank']);
     }
 
     /** @test */
-    function it_logs_a_user_out()
+    public function it_logs_a_user_out()
     {
         $this->post(route('cypress.login'));
 
@@ -53,13 +53,13 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_generates_an_eloquent_model_using_a_factory()
+    public function it_generates_an_eloquent_model_using_a_factory()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
             'attributes' => [
-                'name' => 'John Doe'
-            ]
+                'name' => 'John Doe',
+            ],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
@@ -68,14 +68,14 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_generates_a_collection_of_eloquent_model_using_a_factory()
+    public function it_generates_a_collection_of_eloquent_model_using_a_factory()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
             'times' => 2,
             'attributes' => [
-                'name' => 'John Doe'
-            ]
+                'name' => 'John Doe',
+            ],
         ]);
 
         $this->assertEquals(2, TestUser::whereName('John Doe')->count());
@@ -85,7 +85,7 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_runs_an_artisan_command()
+    public function it_runs_an_artisan_command()
     {
         $called = false;
 
@@ -94,27 +94,27 @@ class CypressControllerTest extends TestCase
         });
 
         $this->post(route('cypress.artisan'), [
-            'command' => 'testing'
+            'command' => 'testing',
         ]);
 
         $this->assertTrue($called);
     }
 
     /** @test */
-    function it_runs_single_line_arbitrary_php()
+    public function it_runs_single_line_arbitrary_php()
     {
         $response = $this->post(route('cypress.run-php'), [
-            'command' => '2 + 3'
+            'command' => '2 + 3',
         ]);
 
         $this->assertEquals(5, $response->json()['result']);
     }
 
     /** @test */
-    function it_runs_multi_line_arbitrary_php()
+    public function it_runs_multi_line_arbitrary_php()
     {
         $response = $this->post(route('cypress.run-php'), [
-            'command' => '$a = 2; $b = 3; return $a + $b;'
+            'command' => '$a = 2; $b = 3; return $a + $b;',
         ]);
 
         $this->assertEquals(5, $response->json()['result']);

@@ -1,7 +1,6 @@
 <?php
 
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
 use Laracasts\Cypress\Tests\Support\TestUser;
 
 /*
@@ -19,6 +18,6 @@ $factory->define(TestUser::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => 'foopassword'
+        'password' => 'foopassword',
     ];
 });

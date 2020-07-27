@@ -42,7 +42,7 @@ class CypressTest extends TestCase
             'cypress.login',
             'cypress.logout',
             'cypress.artisan',
-            'cypress.run-php'
+            'cypress.run-php',
         ]);
     }
 
