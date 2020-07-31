@@ -39,7 +39,7 @@ Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/factory',
-                attributes: {
+                body: {
                     attributes,
                     model,
                     times,
