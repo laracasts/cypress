@@ -24,7 +24,13 @@ Cypress.Commands.add('logout', () => {
 });
 
 Cypress.Commands.add('csrfToken', () => {
-    return cy.request('GET', '/__cypress__/csrf_token').its('body');
+    return cy
+        .request({
+            method: 'GET',
+            url: '/__cypress__/csrf_token',
+            log: false,
+        })
+        .its('body');
 });
 
 Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
