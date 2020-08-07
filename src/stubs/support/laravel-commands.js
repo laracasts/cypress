@@ -1,3 +1,11 @@
+/**
+ * Create a new user and log them in.
+ *
+ * @param {Object} attributes
+ *
+ * @example cy.login();
+ *          cy.login({ name: 'JohnDoe' });
+ */
 Cypress.Commands.add('login', (attributes = {}) => {
     return cy.csrfToken()
         .then(token => {
@@ -24,6 +32,11 @@ Cypress.Commands.add('login', (attributes = {}) => {
         }).its('body', {log: false});
 });
 
+/**
+ * Logout the current user.
+ *
+ * @example cy.logout();
+ */
 Cypress.Commands.add('logout', () => {
     return cy.csrfToken()
         .then(token => {
@@ -44,6 +57,11 @@ Cypress.Commands.add('logout', () => {
         });
 });
 
+/**
+ * Fetch a CSRF token.
+ *
+ * @example cy.csrfToken();
+ */
 Cypress.Commands.add('csrfToken', () => {
     return cy
         .request({
@@ -54,6 +72,17 @@ Cypress.Commands.add('csrfToken', () => {
         .its('body', {log: false});
 });
 
+/**
+ * Create a new Eloquent factory.
+ *
+ * @param {String} model
+ * @param {Number|null} times
+ * @param {Object} attributes
+ *
+ * @example cy.create('App\\User');
+ *          cy.create('App\\User', 2);
+ *          cy.create('App\\User', 2, { active: false });
+ */
 Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
     if (typeof times === 'object' && times !== null) {
         attributes = times;
@@ -89,16 +118,40 @@ Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
         .its('body', {log: false});
 });
 
+/**
+ * Refresh the database state.
+ *
+ * @param {Object} options
+ *
+ * @example cy.refreshDatabase();
+ *          cy.refreshDatabase({ '--drop-views': true });
+ */
 Cypress.Commands.add('refreshDatabase', (options = {}) => {
     return cy.artisan('migrate:fresh', options);
 });
 
+/**
+ * Seed the database.
+ *
+ * @param {String} seederClass
+ *
+ * @example cy.seed();
+ *          cy.seed('PlansTableSeeder');
+ */
 Cypress.Commands.add('seed', (seederClass) => {
     return cy.artisan('db:seed', {
         '--class': seederClass,
     });
 });
 
+/**
+ * Trigger an Artisan command.
+ *
+ * @param {String} command
+ * @param {Object} parameters
+ *
+ * @example cy.artisan('cache:clear');
+ */
 Cypress.Commands.add('artisan', (command, parameters = {}) => {
     Cypress.log({
         name: 'artisan',
@@ -123,7 +176,15 @@ Cypress.Commands.add('artisan', (command, parameters = {}) => {
         });
 });
 
-Cypress.Commands.add('php', (command) => {
+/**
+ * Execute arbitrary PHP.
+ *
+ * @param {String} command
+ *
+ * @example cy.php('2 + 2');
+ *          cy.php('App\\User::count());
+ */
+Cypress.Commands.add('php', command => {
     return cy
         .csrfToken()
         .then((token) => {
