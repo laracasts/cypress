@@ -12,10 +12,7 @@ Cypress.Commands.add('login', (attributes = {}) => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/login',
-                body: {
-                    attributes,
-                    _token: token,
-                },
+                body: { attributes, _token: token },
                 log: false
             })
         })
@@ -23,11 +20,7 @@ Cypress.Commands.add('login', (attributes = {}) => {
             Cypress.log({
                 name: 'login',
                 message: attributes,
-                consoleProps: () => {
-                    return {
-                        user: body
-                    };
-                }
+                consoleProps: () => ({ user: body })
             });
         }).its('body', {log: false});
 });
@@ -43,17 +36,12 @@ Cypress.Commands.add('logout', () => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/logout',
-                body: {
-                    _token: token,
-                },
+                body: { _token: token },
                 log: false
             });
         })
         .then(() => {
-            Cypress.log({
-                name: 'logout',
-                message: ''
-            });
+            Cypress.log({ name: 'logout', message: '' });
         });
 });
 
@@ -95,12 +83,7 @@ Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/factory',
-                body: {
-                    attributes,
-                    model,
-                    times,
-                    _token: token,
-                },
+                body: { attributes, model, times, _token: token },
                 log: false
             })
         })
@@ -108,11 +91,7 @@ Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
             Cypress.log({
                 name: 'create',
                 message: model + (times ? `(${times} times)` : ''),
-                consoleProps: () => {
-                    return {
-                        [model]: response.body
-                    };
-                }
+                consoleProps: () => ({ [model]: response.body })
             });
         })
         .its('body', {log: false});
@@ -156,9 +135,7 @@ Cypress.Commands.add('artisan', (command, parameters = {}) => {
     Cypress.log({
         name: 'artisan',
         message: command,
-        consoleProps: () => {
-            return {command, parameters};
-        }
+        consoleProps: () => ({ command, parameters })
     });
 
     return cy.csrfToken()
@@ -166,11 +143,7 @@ Cypress.Commands.add('artisan', (command, parameters = {}) => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/artisan',
-                body: {
-                    command: command,
-                    parameters: parameters,
-                    _token: token,
-                },
+                body: { command: command, parameters: parameters, _token: token },
                 log: false
             })
         });
@@ -191,10 +164,7 @@ Cypress.Commands.add('php', command => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/run-php',
-                body: {
-                    command: command,
-                    _token: token,
-                },
+                body: { command: command, _token: token },
                 log: false
             });
         })
@@ -202,11 +172,7 @@ Cypress.Commands.add('php', command => {
             Cypress.log({
                 name: 'php',
                 message: command,
-                consoleProps: () => {
-                    return {
-                        result: response.body.result
-                    };
-                }
+                consoleProps: () => ({ result: response.body.result })
             });
         })
         .its('body.result', {log: false});
