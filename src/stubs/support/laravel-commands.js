@@ -7,7 +7,7 @@ Cypress.Commands.add('login', (attributes = {}) => {
                 attributes,
                 _token: token,
             },
-        });
+        }).its('body');
     });
 });
 
