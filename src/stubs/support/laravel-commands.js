@@ -34,7 +34,7 @@ Cypress.Commands.add('csrfToken', () => {
 });
 
 Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
-    if (typeof times === 'object') {
+    if (typeof times === 'object' && times !== null) {
         attributes = times;
         times = null;
     }
