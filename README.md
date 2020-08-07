@@ -1,8 +1,8 @@
 # Laravel + Cypress Integration
 
-[![Total Downloads](https://img.shields.io/packagist/dt/laracasts/cypress.svg?style=flat-square)](https://packagist.org/packages/laracasts/cypress)
-
 This package provides the necessary boilerplate to quickly begin testing your Laravel applications using Cypress.
+
+<img src="https://user-images.githubusercontent.com/183223/89684657-e2e5ef00-d8c8-11ea-825c-ed5b5acc37a4.png" width="300">
 
 ## Installation
 
