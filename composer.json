@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.4",
-        "illuminate/support": "^6.0|^7.0"
+        "illuminate/support": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",
@@ -36,7 +36,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true
