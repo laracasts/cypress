@@ -72,7 +72,7 @@ class CypressBoilerplateCommand extends Command
 
                 npm install cypress --save-dev && npx cypress open
 
-                EOT
+EOT
         );
     }
 }
