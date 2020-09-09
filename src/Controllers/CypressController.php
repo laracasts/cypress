@@ -2,6 +2,7 @@
 
 namespace Laracasts\Cypress\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -10,11 +11,23 @@ class CypressController
 {
     public function login(Request $request)
     {
-        $user = factory($this->userClassName())
-            ->create($request->input('attributes', []));
+        if($request->attributes){
+            // find user based on attributes
+            /**@var Builder $query */
+            $query = app($this->userClassName())
+                ->query();
+            collect($request->attributes)->each(function ($attribute, $key) use($query){
+                $query->where($key, '=', $attribute);
+            });
+            $user = $query->first();
+        }
+
+        if(!isset($user)){
+            $user = factory($this->userClassName())
+                ->create($request->input('attributes', []));
+        }
 
         auth()->login($user);
-
         return $user;
     }
 

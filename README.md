@@ -64,7 +64,7 @@ We allow for this by exposing a handful of Cypress-specific endpoints in your ap
 
 ### cy.login()
 
-Create a new user record matching the optional attributes provided and set it as the authenticated user for the test.
+Finds an existing user matching the optional attributes provided and set it as the authenticated user for the test. Create a new user record if not found. 
 
 ```js
 test('authenticated users can see the dashboard', () => {
