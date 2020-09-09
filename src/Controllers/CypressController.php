@@ -10,7 +10,7 @@ class CypressController
 {
     public function login(Request $request)
     {
-        $user = factory($this->userClassName())
+        $user = $this->factoryBuilder($this->userClassName())
             ->create($request->input('attributes', []));
 
         auth()->login($user);
@@ -25,7 +25,7 @@ class CypressController
 
     public function factory(Request $request)
     {
-        return factory($request->input('model'))
+        return $this->factoryBuilder($request->input('model'))
             ->times($request->input('times'))
             ->create($request->input('attributes'));
     }
@@ -60,5 +60,15 @@ class CypressController
     protected function userClassName()
     {
         return config('auth.providers.users.model');
+    }
+
+    protected function factoryBuilder($model)
+    {
+        // Should we use legacy factories?
+        if (class_exists('Illuminate\Database\Eloquent\Factory')) {
+            return factory($model);
+        }
+
+        return (new $model)->factory();
     }
 }
