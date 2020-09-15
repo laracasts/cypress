@@ -71,12 +71,7 @@ Cypress.Commands.add('csrfToken', () => {
  *          cy.create('App\\User', 2);
  *          cy.create('App\\User', 2, { active: false });
  */
-Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
-    if (typeof times === 'object' && times !== null) {
-        attributes = times;
-        times = null;
-    }
-
+Cypress.Commands.add('create', (model, attributes = {}, times = 1) => {
     return cy
         .csrfToken()
         .then(token => {
