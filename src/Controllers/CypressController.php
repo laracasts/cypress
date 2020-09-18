@@ -26,7 +26,7 @@ class CypressController
     public function factory(Request $request)
     {
         return $this->factoryBuilder($request->input('model'))
-            ->times($request->input('times'))
+            ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'));
     }
 
