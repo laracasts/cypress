@@ -19,7 +19,7 @@ class CypressControllerTest extends TestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
-        $this->withFactories(__DIR__ . '/support/factories');
+        $this->withFactories(__DIR__.'/support/factories');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }

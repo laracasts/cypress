@@ -2,9 +2,9 @@
 
 namespace Laracasts\Cypress\Controllers;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 
 class CypressController
 {
@@ -54,7 +54,7 @@ class CypressController
             $code .= ';';
         }
 
-        if (!Str::contains($code, 'return')) {
+        if (! Str::contains($code, 'return')) {
             $code = 'return ' . $code;
         }
 
