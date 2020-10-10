@@ -25,9 +25,15 @@ class CypressController
 
     public function factory(Request $request)
     {
-        return $this->factoryBuilder($request->input('model'))
+        $collection = $this->factoryBuilder($request->input('model'))
             ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'));
+
+        if ($collection->count() === 1) {
+            return $collection->first();
+        }
+
+        return $collection;
     }
 
     public function artisan(Request $request)
@@ -48,7 +54,7 @@ class CypressController
             $code .= ';';
         }
 
-        if (! Str::contains($code, 'return')) {
+        if (!Str::contains($code, 'return')) {
             $code = 'return ' . $code;
         }
 
