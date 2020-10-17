@@ -55,11 +55,11 @@ class CypressController
         }
 
         if (! Str::contains($code, 'return')) {
-            $code = 'return ' . $code;
+            $code = 'return '.$code;
         }
 
         return response()->json([
-            'result' => eval($code)
+            'result' => eval($code),
         ]);
     }
 
