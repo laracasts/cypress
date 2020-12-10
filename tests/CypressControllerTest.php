@@ -64,7 +64,7 @@ class CypressControllerTest extends TestCase
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
 
-        $this->assertEquals('John Doe', $response->json()['name']);
+        $this->assertEquals('John Doe', $response->json()[0]['name']);
     }
 
     /** @test */
