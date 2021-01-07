@@ -1,5 +1,5 @@
 {
-    "name": "laracasts/cypress",
+    "name": "kraenkvisuell/cypress",
     "description": "Laravel Cypress Boilerplate",
     "keywords": [
         "laracasts",
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.3",
+        "php": ">=7.3",
         "illuminate/support": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
