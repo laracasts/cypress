@@ -155,7 +155,7 @@ Cypress.Commands.add('artisan', (command, parameters = {}) => {
  * @param {String} command
  *
  * @example cy.php('2 + 2');
- *          cy.php('App\\User::count());
+ *          cy.php('App\\User::count()');
  */
 Cypress.Commands.add('php', command => {
     return cy
