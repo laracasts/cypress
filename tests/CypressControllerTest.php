@@ -43,6 +43,20 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_logs_an_existing_user_in_with_the_given_attribute()
+    {
+        $user = factory(TestUser::class)->create([
+            'name' => 'Frank2'
+        ]);
+        $userCounts = TestUser::count();
+        $this->post(route('cypress.login'), [
+            'attributes' => ['name' => 'Frank2'],
+        ]);
+        $this->assertEquals($userCounts, TestUser::count());
+        $this->assertEquals(auth()->user()->id, $user->id);
+    }
+
+    /** @test */
     public function it_logs_a_user_out()
     {
         $this->post(route('cypress.login'));
@@ -64,7 +78,7 @@ class CypressControllerTest extends TestCase
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
 
-        $this->assertEquals('John Doe', $response->json()[0]['name']);
+        $this->assertEquals('John Doe', $response->json()['name']);
     }
 
     /** @test */
