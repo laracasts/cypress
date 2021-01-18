@@ -27,7 +27,7 @@ class CypressController
             );
         }
 
-        auth()->login($user);
+        auth()->login($user->setHidden([]));
 
         return $user;
     }

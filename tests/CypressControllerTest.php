@@ -33,6 +33,18 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_makes_all_logged_in_user_attributes_visible()
+    {
+        $response = $this->post(route('cypress.login'));
+
+        $this->assertTrue(auth()->check());
+
+        // The TestUser model sets the "plan" field to hidden. But
+        // when we fetch it with Cypress, it should be visible.
+        $this->assertEquals('monthly', $response->json()['plan']);
+    }
+
+    /** @test */
     public function it_logs_a_new_user_in_with_the_given_attributes()
     {
         $this->post(route('cypress.login'), [
