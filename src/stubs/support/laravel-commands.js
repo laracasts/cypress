@@ -73,8 +73,10 @@ Cypress.Commands.add('csrfToken', () => {
  */
 Cypress.Commands.add('create', (model, times = null, attributes = {}) => {
     if (typeof times === 'object' && times !== null) {
+Cypress.Commands.add("create", (model, times = 1, attributes = {}) => {
+    if (typeof times === "object") {
         attributes = times;
-        times = null;
+        times = 1;
     }
 
     return cy
