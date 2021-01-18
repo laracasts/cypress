@@ -39,14 +39,16 @@ class CypressController
 
     public function factory(Request $request)
     {
-        $builder = $this->factoryBuilder($request->input('model'));
         $times = intval($request->input('times', 1));
 
-        if ($times > 1) {
-            $builder->times($times);
-        }
+        $collection = $this->factoryBuilder($request->input('model'))
+            ->times($times)
+            ->create($request->input('attributes'))
+            ->each(function ($model) {
+                $model->setHidden([]);
+            });
 
-        return $builder->create($request->input('attributes'));
+        return $collection->count() === 1 ? $collection->first() : $collection;
     }
 
     public function artisan(Request $request)

@@ -18,6 +18,7 @@ $factory->define(TestUser::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
+        'plan' => 'monthly',
         'password' => 'foopassword',
     ];
 });

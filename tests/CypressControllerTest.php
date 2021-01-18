@@ -102,6 +102,38 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
+    function it_makes_model_attributes_visible()
+    {
+        $response = $this->post(route('cypress.factory'), [
+            'model' => TestUser::class,
+            'attributes' => [
+                'name' => 'John Doe',
+            ],
+        ]);
+
+        // The TestUser model sets the "plan" field to hidden. But
+        // when we fetch it with Cypress, it should be visible.
+        $this->assertEquals('monthly', $response->json()['plan']);
+    }
+
+    /** @test */
+    function it_makes_collection_model_attributes_visible()
+    {
+        $response = $this->post(route('cypress.factory'), [
+            'model' => TestUser::class,
+            'times' => 2,
+            'attributes' => [
+                'name' => 'John Doe',
+            ],
+        ]);
+
+        // The TestUser model sets the "plan" field to hidden. But
+        // when we fetch it with Cypress, it should be visible.
+        $this->assertEquals('monthly', $response->json()[0]['plan']);
+        $this->assertEquals('monthly', $response->json()[1]['plan']);
+    }
+
+    /** @test */
     public function it_runs_an_artisan_command()
     {
         $called = false;
