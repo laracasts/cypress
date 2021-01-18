@@ -11,18 +11,18 @@ class CypressController
 {
     public function login(Request $request)
     {
-        if ($request->attributes){
+        if($request->attributes){
             /**@var Builder $query */
             $query = app($this->userClassName())->query();
 
-            collect($request->attributes)->each(function ($attribute, $key) use($query){
+            collect($request->attributes)->each(function ($attribute, $key) use($query) {
                 $query->where($key, '=', $attribute);
             });
 
             $user = $query->first();
         }
 
-        if(!isset($user)){
+        if (!isset($user)) {
             $user = $this->factoryBuilder($this->userClassName())
                 ->create($request->input('attributes', []));
         }
