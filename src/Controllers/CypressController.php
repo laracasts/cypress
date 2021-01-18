@@ -2,9 +2,9 @@
 
 namespace Laracasts\Cypress\Controllers;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 
 class CypressController
 {
@@ -25,9 +25,15 @@ class CypressController
 
     public function factory(Request $request)
     {
-        return $this->factoryBuilder($request->input('model'))
+        $collection = $this->factoryBuilder($request->input('model'))
             ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'));
+
+        if ($collection->count() === 1) {
+            return $collection->first();
+        }
+
+        return $collection;
     }
 
     public function artisan(Request $request)
@@ -49,11 +55,11 @@ class CypressController
         }
 
         if (! Str::contains($code, 'return')) {
-            $code = 'return ' . $code;
+            $code = 'return '.$code;
         }
 
         return response()->json([
-            'result' => eval($code)
+            'result' => eval($code),
         ]);
     }
 
