@@ -11,20 +11,20 @@ class CypressController
 {
     public function login(Request $request)
     {
-        if($request->attributes){
-            /**@var Builder $query */
+        if ($attributes = $request->input('attributes')) {
             $query = app($this->userClassName())->query();
 
-            collect($request->attributes)->each(function ($attribute, $key) use($query) {
-                $query->where($key, '=', $attribute);
-            });
+            foreach ($attributes as $name => $value) {
+                $query->where($name, $value);
+            }
 
             $user = $query->first();
         }
 
         if (!isset($user)) {
-            $user = $this->factoryBuilder($this->userClassName())
-                ->create($request->input('attributes', []));
+            $user = $this->factoryBuilder($this->userClassName())->create(
+                $request->input('attributes', [])
+            );
         }
 
         auth()->login($user);
@@ -39,20 +39,22 @@ class CypressController
 
     public function factory(Request $request)
     {
-        $collection = $this->factoryBuilder($request->input('model'))
-            ->times(intval($request->input('times', 1)))
-            ->create($request->input('attributes'));
+        $builder = $this->factoryBuilder($request->input('model'));
+        $times = intval($request->input('times', 1));
 
-        if ($collection->count() === 1) {
-            return $collection->first();
+        if ($times > 1) {
+            $builder->times($times);
         }
 
-        return $collection;
+        return $builder->create($request->input('attributes'));
     }
 
     public function artisan(Request $request)
     {
-        Artisan::call($request->input('command'), $request->input('parameters', []));
+        Artisan::call(
+            $request->input('command'),
+            $request->input('parameters', [])
+        );
     }
 
     public function csrfToken()
@@ -68,8 +70,8 @@ class CypressController
             $code .= ';';
         }
 
-        if (! Str::contains($code, 'return')) {
-            $code = 'return '.$code;
+        if (!Str::contains($code, 'return')) {
+            $code = 'return ' . $code;
         }
 
         return response()->json([
@@ -89,6 +91,6 @@ class CypressController
             return factory($model);
         }
 
-        return (new $model)->factory();
+        return (new $model())->factory();
     }
 }

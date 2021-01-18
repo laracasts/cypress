@@ -19,7 +19,7 @@ class CypressControllerTest extends TestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
-        $this->withFactories(__DIR__.'/support/factories');
+        $this->withFactories(__DIR__ . '/support/factories');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }
@@ -45,15 +45,20 @@ class CypressControllerTest extends TestCase
     /** @test */
     public function it_logs_an_existing_user_in_with_the_given_attribute()
     {
-        $user = factory(TestUser::class)->create([
-            'name' => 'Frank2'
+        factory(TestUser::class)->create([
+            'name' => 'Joe',
         ]);
-        $userCounts = TestUser::count();
-        $this->post(route('cypress.login'), [
-            'attributes' => ['name' => 'Frank2'],
+
+        $frank = factory(TestUser::class)->create([
+            'name' => 'Frank',
         ]);
-        $this->assertEquals($userCounts, TestUser::count());
-        $this->assertEquals(auth()->user()->id, $user->id);
+
+        $response = $this->post(route('cypress.login'), [
+            'attributes' => ['name' => 'Frank'],
+        ]);
+
+        $this->assertEquals(2, TestUser::count());
+        $this->assertEquals($frank->id, $response->json()['id']);
     }
 
     /** @test */
@@ -77,7 +82,6 @@ class CypressControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
-
         $this->assertEquals('John Doe', $response->json()['name']);
     }
 
@@ -93,7 +97,6 @@ class CypressControllerTest extends TestCase
         ]);
 
         $this->assertEquals(2, TestUser::whereName('John Doe')->count());
-
         $this->assertCount(2, $response->json());
         $this->assertEquals('John Doe', $response->json()[0]['name']);
     }
