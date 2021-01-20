@@ -6,25 +6,25 @@
  * @example cy.login();
  *          cy.login({ name: 'JohnDoe' });
  */
-Cypress.Commands.add("login", (attributes = {}) => {
+Cypress.Commands.add('login', (attributes = {}) => {
     return cy
         .csrfToken()
         .then((token) => {
             return cy.request({
-                method: "POST",
-                url: "/__cypress__/login",
+                method: 'POST',
+                url: '/__cypress__/login',
                 body: { attributes, _token: token },
                 log: false,
             });
         })
         .then(({ body }) => {
             Cypress.log({
-                name: "login",
+                name: 'login',
                 message: attributes,
                 consoleProps: () => ({ user: body }),
             });
         })
-        .its("body", { log: false });
+        .its('body', { log: false });
 });
 
 /**
@@ -32,19 +32,19 @@ Cypress.Commands.add("login", (attributes = {}) => {
  *
  * @example cy.logout();
  */
-Cypress.Commands.add("logout", () => {
+Cypress.Commands.add('logout', () => {
     return cy
         .csrfToken()
         .then((token) => {
             return cy.request({
-                method: "POST",
-                url: "/__cypress__/logout",
+                method: 'POST',
+                url: '/__cypress__/logout',
                 body: { _token: token },
                 log: false,
             });
         })
         .then(() => {
-            Cypress.log({ name: "logout", message: "" });
+            Cypress.log({ name: 'logout', message: '' });
         });
 });
 
@@ -53,14 +53,14 @@ Cypress.Commands.add("logout", () => {
  *
  * @example cy.csrfToken();
  */
-Cypress.Commands.add("csrfToken", () => {
+Cypress.Commands.add('csrfToken', () => {
     return cy
         .request({
-            method: "GET",
-            url: "/__cypress__/csrf_token",
+            method: 'GET',
+            url: '/__cypress__/csrf_token',
             log: false,
         })
-        .its("body", { log: false });
+        .its('body', { log: false });
 });
 
 /**
@@ -74,8 +74,8 @@ Cypress.Commands.add("csrfToken", () => {
  *          cy.create('App\\User', 2);
  *          cy.create('App\\User', 2, { active: false });
  */
-Cypress.Commands.add("create", (model, times = 1, attributes = {}) => {
-    if (typeof times === "object") {
+Cypress.Commands.add('create', (model, times = 1, attributes = {}) => {
+    if (typeof times === 'object') {
         attributes = times;
         times = 1;
     }
@@ -84,20 +84,20 @@ Cypress.Commands.add("create", (model, times = 1, attributes = {}) => {
         .csrfToken()
         .then((token) => {
             return cy.request({
-                method: "POST",
-                url: "/__cypress__/factory",
+                method: 'POST',
+                url: '/__cypress__/factory',
                 body: { attributes, model, times, _token: token },
                 log: false,
             });
         })
         .then((response) => {
             Cypress.log({
-                name: "create",
-                message: model + (times ? `(${times} times)` : ""),
+                name: 'create',
+                message: model + (times ? `(${times} times)` : ''),
                 consoleProps: () => ({ [model]: response.body }),
             });
         })
-        .its("body", { log: false });
+        .its('body', { log: false });
 });
 
 /**
@@ -108,8 +108,8 @@ Cypress.Commands.add("create", (model, times = 1, attributes = {}) => {
  * @example cy.refreshDatabase();
  *          cy.refreshDatabase({ '--drop-views': true });
  */
-Cypress.Commands.add("refreshDatabase", (options = {}) => {
-    return cy.artisan("migrate:fresh", options);
+Cypress.Commands.add('refreshDatabase', (options = {}) => {
+    return cy.artisan('migrate:fresh', options);
 });
 
 /**
@@ -120,9 +120,9 @@ Cypress.Commands.add("refreshDatabase", (options = {}) => {
  * @example cy.seed();
  *          cy.seed('PlansTableSeeder');
  */
-Cypress.Commands.add("seed", (seederClass) => {
-    return cy.artisan("db:seed", {
-        "--class": seederClass,
+Cypress.Commands.add('seed', (seederClass) => {
+    return cy.artisan('db:seed', {
+        '--class': seederClass,
     });
 });
 
@@ -131,6 +131,7 @@ Cypress.Commands.add("seed", (seederClass) => {
  *
  * @param {String} command
  * @param {Object} parameters
+ * @param {Object} options
  *
  * @example cy.artisan('cache:clear');
  */
@@ -147,8 +148,8 @@ Cypress.Commands.add('artisan', (command, parameters = {}, options = {}) => {
 
     return cy.csrfToken().then((token) => {
         return cy.request({
-            method: "POST",
-            url: "/__cypress__/artisan",
+            method: 'POST',
+            url: '/__cypress__/artisan',
             body: { command: command, parameters: parameters, _token: token },
             log: false,
         });
@@ -163,23 +164,23 @@ Cypress.Commands.add('artisan', (command, parameters = {}, options = {}) => {
  * @example cy.php('2 + 2');
  *          cy.php('App\\User::count()');
  */
-Cypress.Commands.add("php", (command) => {
+Cypress.Commands.add('php', (command) => {
     return cy
         .csrfToken()
         .then((token) => {
             return cy.request({
-                method: "POST",
-                url: "/__cypress__/run-php",
+                method: 'POST',
+                url: '/__cypress__/run-php',
                 body: { command: command, _token: token },
                 log: false,
             });
         })
         .then((response) => {
             Cypress.log({
-                name: "php",
+                name: 'php',
                 message: command,
                 consoleProps: () => ({ result: response.body.result }),
             });
         })
-        .its("body.result", { log: false });
+        .its('body.result', { log: false });
 });

@@ -13,16 +13,16 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import './commands'
+import './commands';
 import './laravel-commands';
 import './assertions';
 
 before(() => {
-    cy.task('activateCypressEnvFile', {}, {log: false});
-    cy.artisan('config:clear', {}, {log: false});
+    cy.task('activateCypressEnvFile', {}, { log: false });
+    cy.artisan('config:clear', {}, { log: false });
 });
 
 after(() => {
-    cy.task('activateLocalEnvFile', {}, {log: false});
-    cy.artisan('config:clear', {}, {log: false});
+    cy.task('activateLocalEnvFile', {}, { log: false });
+    cy.artisan('config:clear', {}, { log: false });
 });
