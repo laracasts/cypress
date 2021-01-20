@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class CypressBoilerplateCommand extends Command
 {
-    protected $signature = 'cypress:boilerplate';
+    protected $signature = 'cypress:boilerplate {--cypressPath=cypress : Location of cypress folder}';
 
     protected $description = 'Generate useful Cypress boilerplate.';
 
@@ -22,7 +22,7 @@ class CypressBoilerplateCommand extends Command
 
     public function handle()
     {
-        if ($this->files->exists(base_path('cypress'))) {
+        if ($this->files->exists($this->cypressPath())) {
             $this->copyStubs();
 
             return;
@@ -33,16 +33,16 @@ class CypressBoilerplateCommand extends Command
 
     protected function copyStubs()
     {
-        $this->files->copyDirectory(__DIR__.'/stubs/support', base_path('cypress/support'));
-        $this->files->copyDirectory(__DIR__.'/stubs/plugins', base_path('cypress/plugins'));
+        $this->files->copyDirectory(__DIR__.'/stubs/support', $this->cypressPath('/support'));
+        $this->files->copyDirectory(__DIR__.'/stubs/plugins', $this->cypressPath('/plugins'));
 
         $this->lineBreak();
 
-        $this->status('Updated', 'cypress/support/index.js');
-        $this->status('Updated', 'cypress/plugins/index.js');
-        $this->status('Created', 'cypress/plugins/swap-env.js');
-        $this->status('Created', 'cypress/support/laravel-commands.js');
-        $this->status('Created', 'cypress/support/assertions.js');
+        $this->status('Updated', $this->cypressPath('/support/index.js', false));
+        $this->status('Updated', $this->cypressPath('/plugins/index.js', false));
+        $this->status('Created', $this->cypressPath('/plugins/swap-env.js', false));
+        $this->status('Created', $this->cypressPath('/support/laravel-commands.js', false));
+        $this->status('Created', $this->cypressPath('/support/assertions.js', false));
 
         if (! $this->files->exists($path = base_path('.env.cypress'))) {
             $this->files->copy(base_path('.env'), $path);
@@ -51,6 +51,10 @@ class CypressBoilerplateCommand extends Command
         }
 
         $this->lineBreak();
+    }
+
+    protected function cypressPath($path = '', $includeBasePath = true){
+        return base_path($this->option('cypressPath') . $path);
     }
 
     protected function status($type, $file)
