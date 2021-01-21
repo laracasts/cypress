@@ -12,9 +12,7 @@ class CypressController
 {
     public function routes()
     {
-        $routes = Route::getRoutes()->getRoutes();
-
-        return collect($routes)
+        return collect(Route::getRoutes()->getRoutes())
             ->map(function (\Illuminate\Routing\Route $route) {
                 return [
                     'name' => $route->getName(),
@@ -56,16 +54,12 @@ class CypressController
 
     public function factory(Request $request)
     {
-        $times = intval($request->input('times', 1));
-
         $collection = $this->factoryBuilder($request->input('model'))
-            ->times($times)
+            ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'))
-            ->each(function ($model) {
-                $model->setHidden([]);
-            });
+            ->each->setHidden([]);
 
-        return $collection->count() === 1 ? $collection->first() : $collection;
+        return $collection->count() > 1 ? $collection : $collection->first();
     }
 
     public function artisan(Request $request)
