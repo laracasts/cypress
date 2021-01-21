@@ -3,12 +3,30 @@
 namespace Laracasts\Cypress\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
 class CypressController
 {
+    public function routes()
+    {
+        $routes = Route::getRoutes()->getRoutes();
+
+        return collect($routes)
+            ->map(function (\Illuminate\Routing\Route $route) {
+                return [
+                    'name' => $route->getName(),
+                    'domain' => $route->getDomain(),
+                    'action' => $route->getActionName(),
+                    'uri' => $route->uri(),
+                    'method' => $route->methods(),
+                ];
+            })
+            ->keyBy('name');
+    }
+
     public function login(Request $request)
     {
         if ($attributes = $request->input('attributes')) {

@@ -3,6 +3,7 @@
 namespace Laracasts\Cypress\Tests;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
 use Laracasts\Cypress\CypressServiceProvider;
 use Laracasts\Cypress\Tests\Support\TestUser;
 use Orchestra\Testbench\TestCase;
@@ -22,6 +23,24 @@ class CypressControllerTest extends TestCase
         $this->withFactories(__DIR__ . '/support/factories');
 
         config(['auth.providers.users.model' => TestUser::class]);
+    }
+
+    /** @test */
+    function it_fetches_a_collection_of_named_routes()
+    {
+        Route::get('foo')->name('home');
+
+        $response = $this->post(route('cypress.routes'));
+
+        $response->assertJsonFragment([
+            'uri' => 'foo',
+            'name' => 'home',
+            'method' => ['GET', 'HEAD'],
+            'action' => 'Closure',
+            'domain' => null,
+        ]);
+
+        $this->assertArrayHasKey('home', $response->json());
     }
 
     /** @test */

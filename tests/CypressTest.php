@@ -20,7 +20,7 @@ class CypressTest extends TestCase
     public function it_does_not_expose_cypress_routes_in_production()
     {
         $this->routeNames()->each(
-            fn ($name) => $this->assertFalse(Route::has($name))
+            fn($name) => $this->assertFalse(Route::has($name))
         );
     }
 
@@ -31,7 +31,7 @@ class CypressTest extends TestCase
     public function it_exposes_cypress_routes_if_not_in_production()
     {
         $this->routeNames()->each(
-            fn ($name) => $this->assertTrue(Route::has($name))
+            fn($name) => $this->assertTrue(Route::has($name))
         );
     }
 
@@ -44,16 +44,17 @@ class CypressTest extends TestCase
             'cypress.artisan',
             'cypress.run-php',
             'cypress.csrf-token',
+            'cypress.routes',
         ]);
     }
 
     protected function setUpAcceptanceEnvironment()
     {
-        app()->detectEnvironment(fn () => 'acceptance');
+        app()->detectEnvironment(fn() => 'acceptance');
     }
 
     protected function setUpProductionEnvironment()
     {
-        app()->detectEnvironment(fn () => 'production');
+        app()->detectEnvironment(fn() => 'production');
     }
 }

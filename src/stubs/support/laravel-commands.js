@@ -64,6 +64,49 @@ Cypress.Commands.add('csrfToken', () => {
 });
 
 /**
+ * Fetch and store all named routes.
+ *
+ * @example cy.refreshRoutes();
+ */
+Cypress.Commands.add('refreshRoutes', () => {
+    return cy.csrfToken().then((token) => {
+        return cy
+            .request({
+                method: 'POST',
+                url: '/__cypress__/routes',
+                body: { _token: token },
+                log: false,
+            })
+            .its('body', { log: false })
+            .then((routes) => {
+                cy.writeFile('cypress/support/routes.json', routes, {
+                    log: false,
+                });
+
+                Cypress.Laravel.routes = routes;
+            });
+    });
+});
+
+/**
+ * Visit the given URL or route.
+ *
+ * @example cy.visit('foo/path');
+ *          cy.visit({ route: 'home' });
+ *          cy.visit({ route: 'team', parameters: { team: 1 } });
+ */
+Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
+    if (subject.route) {
+        return originalFn({
+            url: Cypress.Laravel.route(subject.route, subject.parameters || {}),
+            method: Cypress.Laravel.routes[subject.route].method[0],
+        });
+    }
+
+    return originalFn(subject, options);
+});
+
+/**
  * Create a new Eloquent factory.
  *
  * @param {String} model
