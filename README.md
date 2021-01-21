@@ -4,27 +4,25 @@ This package provides the necessary boilerplate to quickly begin testing your La
 
 <img src="https://user-images.githubusercontent.com/183223/89684657-e2e5ef00-d8c8-11ea-825c-ed5b5acc37a4.png" width="300">
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Environment Handling](#environment-handling)
+- [Routing](#routing)
+- [API](#api)
+
 ## Installation
 
-Begin by installing the package as a Composer development-only dependency.
-
-```bash
-composer require --dev laracasts/cypress
-```
-
-If you haven't yet pulled in Cypress through npm, that's your next step:
+If you haven't already installed [Cypress](https://www.cypress.io/), that's your first step.
 
 ```bash
 npm install cypress --save-dev && npx cypress open
 ```
 
-Next, generate the necessary Laravel Cypress boilerplate:
+As part of the initial `npx cypress open` command, Cypress will add a `./cypress` directory to your project root, 
+as well as a `cypress.json` configuration file.
 
-```bash
-php artisan cypress:boilerplate
-```
-
-The final step is one you'll perform regardless of whether you use this package or not. Update your `cypress.json` file with the `baseUrl` of your application.
+You'll almost always want to set a `baseUrl` for your Cypress tests, so do so now within `cypress.json`.
 
 ```json
 {
@@ -32,11 +30,25 @@ The final step is one you'll perform regardless of whether you use this package 
 }
 ```
 
-When making requests in your Cypress tests, this `baseUrl` will be prepended to any relative URL you provide.
+When making requests through Cypress, this `baseUrl` path will be prepended to any relative URL you provide.
 
 ```js
 cy.visit('/foo'); // http://my-app.test/foo
 ```
+
+Now you're ready to install this package through Composer. Pull it in as a development-only dependency.
+
+```bash
+composer require laracasts/cypress --dev
+```
+
+Finally, run the `cypress:boilerplate` command to copy over the initial boilerplate files for your Cypress tests.
+
+```bash
+php artisan cypress:boilerplate
+```
+
+That's it! You're ready to go.
 
 ## Environment Handling
 
@@ -44,7 +56,7 @@ After running the `php artisan cypress:boilerplate` command, you'll now have a `
 file in your project root. To get you started, this file is a duplicate of `.env`. Feel free to update
 it as needed to prepare your application for your Cypress tests.
 
-Likely, you'll want to use a special database to ensure that your Cypress acceptance tests are isolated from your local database.
+Likely, you'll want to use a special database to ensure that your Cypress acceptance tests are isolated from your development database.
 
 ```
 DB_CONNECTION=mysql
@@ -56,7 +68,49 @@ Once complete, of course the environment files will be reset to how they origina
 
 > All Cypress tests run according to the environment specified in `.env.cypress`.
 
-## Usage
+## Routing
+
+Each time your test suite runs, this package will fetch all named routes for your Laravel application, 
+and store them in memory. You'll additionally find a `./cypress/support/routes.json` file that contains a dump of this JSON.
+
+This package overrides the base `cy.visit()` method to allow for optionally passing a `route` name instead of a URL.
+
+```js
+test('it loads the about page using a named route', () => {
+    cy.visit({
+        route: 'about'
+    });
+});
+```
+
+If the named route requires a wildcard, you may include it using the `parameters` property.
+
+```js
+test('it loads the team dashboard page using a named route', () => {
+    cy.visit({
+        route: 'team.dashboard',
+        parameters: { team: 1 }
+    });
+});
+```
+
+Should you need to access the full list of routes for your application, use the `Cypress.Laravel.routes` property.
+
+```js
+// Get an array of all routes for your app.
+
+Cypress.Laravel.routes; // ['home' => []]
+```
+
+Further, if you need to translate a named route to its associated URL, instead use the `Cypress.Laravel.route()` method, like so:
+
+```js
+Cypress.Laravel.route('about'); // /about-page
+
+Cypress.Laravel.route('team.dashboard', { team: 1 }); // /teams/1/dashboard
+```
+
+## API
 
 This package will add a variety of commands to your Cypress workflow to make for a more familiar Laravel testing environment.
 
@@ -68,9 +122,9 @@ Finds an existing user matching the optional attributes provided and set it as t
 
 ```js
 test('authenticated users can see the dashboard', () => {
-  cy.login({ name: 'John Doe' });
+  cy.login({ username: 'JohnDoe' });
 
-  cy.visit('/dashboard').contains('Welcome Back, John Doe!');
+  cy.visit('/dashboard').contains('Welcome Back, JohnDoe!');
 });
 ```
 
@@ -80,9 +134,7 @@ Log out the currently authenticated user. Equivalent to `auth()->logout()`.
 
 ```js
 test('once a user logs out they cannot see the dashboard', () => {
-  cy.login({ name: 'John Doe' });
-
-  cy.visit('/dashboard').contains('Welcome Back, John Doe!');
+  cy.login({ username: 'JohnDoe' });
 
   cy.logout();
 
@@ -119,10 +171,31 @@ test('it shows blog posts', () => {
 });
 ```
 
+Alternatively, if you pass an object as the second argument to `cy.create()`, you can override any default attributes for the factory call.
+
+```js
+test('it shows blog posts', () => {
+    cy.create('App\\Post', { title: 'My First Post' });
+
+    //
+});
+```
+
+### cy.refreshRoutes()
+
+Before your Cypress test suite begins, this package will automatically fetch a collection of all named routes for your Laravel app and store them in memory.
+You shouldn't need to manually call this method, however, it's available to you if your routing will change as side effect of a particular test.
+
+```js
+test('it refreshes the list of Laravel named routes in memory', () => {
+    cy.refreshRoutes();
+});
+```
+
 ### cy.refreshDatabase()
 
 Trigger a `migrate:refresh` on your test database. Often, you'll apply this in a `beforeEach` call to ensure that,
-before each new test in the file, your database is freshly migrated and cleaned up.
+before each new test, your database is freshly migrated and cleaned up.
 
 ```js
 beforeEach(() => {
