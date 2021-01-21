@@ -82,10 +82,11 @@ class CypressControllerTest extends TestCase
 
         $frank = factory(TestUser::class)->create([
             'name' => 'Frank',
+            'plan' => 'monthly',
         ]);
 
         $response = $this->post(route('cypress.login'), [
-            'attributes' => ['name' => 'Frank'],
+            'attributes' => ['name' => 'Frank', 'plan' => 'monthly'],
         ]);
 
         $this->assertEquals(2, TestUser::count());

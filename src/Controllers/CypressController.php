@@ -29,25 +29,24 @@ class CypressController
 
     public function login(Request $request)
     {
-        if ($attributes = $request->input('attributes')) {
-            $query = app($this->userClassName())->query();
+        $attributes = $request->input('attributes', []);
 
-            foreach ($attributes as $name => $value) {
-                $query->where($name, $value);
-            }
+        $user = app($this->userClassName())
+            ->newQuery()
+            ->where($attributes)
+            ->first();
 
-            $user = $query->first();
-        }
-
-        if (!isset($user)) {
+        if (!$user) {
             $user = $this->factoryBuilder($this->userClassName())->create(
-                $request->input('attributes', [])
+                $attributes
             );
         }
 
-        auth()->login($user);
+        return tap($user, function ($user) {
+            auth()->login($user);
 
-        return $user->setHidden([]);
+            $user->setHidden([]);
+        });
     }
 
     public function logout()
