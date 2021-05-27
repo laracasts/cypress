@@ -18,6 +18,8 @@ Cypress.Commands.add('login', (attributes = {}) => {
             });
         })
         .then(({ body }) => {
+            Cypress.Laravel.currentUser = body;
+
             Cypress.log({
                 name: 'login',
                 message: attributes,
