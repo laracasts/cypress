@@ -68,6 +68,18 @@ Once complete, of course the environment files will be reset to how they origina
 
 > All Cypress tests run according to the environment specified in `.env.cypress`.
 
+However, when your Cypress tests fail, it can often be useful to manually browse your application in the exact state that triggered the test failure. You can't do this if 
+your environment is automatically reverted after each test run. To solve this, temporarily disable the Cypress task that resets the environment. Visit `cypress/support/index.js` and comment 
+out this portion.
+
+```js
+after(() => {
+  // cy.task("activateLocalEnvFile", {}, { log: false });
+});
+```
+
+That should do it!
+
 ## Routing
 
 Each time your test suite runs, this package will fetch all named routes for your Laravel application, 
@@ -157,17 +169,14 @@ test('it shows blog posts', () => {
 Note that the `cy.create()` call above is equivalent to:
 
 ```php
-factory('App\Post')->create(['title' => 'My First Post']);
+App\Post::factory()->create(['title' => 'My First Post']);
 ```
 
-You may optionally specify the number of records you require as the second argument. If provided, the attributes
-can be provided as the third argument.
+You may optionally specify the number of records you require as the second argument. This will then return a collection of posts.
 
 ```js
 test('it shows blog posts', () => {
   cy.create('App\\Post', 3);
-
-  //
 });
 ```
 
@@ -180,6 +189,16 @@ test('it shows blog posts', () => {
     //
 });
 ```
+
+Lastly, you can request that certain model relationships be loaded and returned as part of the JSON response. 
+
+```js
+test('it shows blog posts', () => {
+    cy.create('App\\Post', { title: 'My First Post' }, ['author']);
+});
+```
+
+As you can see, the `cy.create()` argument list is dynamic to make for a simpler API.
 
 ### cy.refreshRoutes()
 

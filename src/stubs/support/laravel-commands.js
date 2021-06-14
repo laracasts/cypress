@@ -116,9 +116,21 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
  * @example cy.create('App\\User');
  *          cy.create('App\\User', 2);
  *          cy.create('App\\User', 2, { active: false });
+ *          cy.create('App\\User', { active: false });
+ *          cy.create('App\\User', 2, { active: false });
+ *          cy.create('App\\User', 2, { active: false }, ['profile']);
+ *          cy.create('App\\User', { active: false }, ['profile']);
+ *          cy.create('App\\User', ['profile']);
  */
-Cypress.Commands.add('create', (model, times = 1, attributes = {}) => {
+Cypress.Commands.add('create', (model, times = 1, attributes = {}, relations = []) => {
+    if (Array.isArray(times)) {
+        attributes = {};
+        relations = times;
+        times = 1;
+    }
+
     if (typeof times === 'object') {
+        relations = attributes;
         attributes = times;
         times = 1;
     }
@@ -129,7 +141,7 @@ Cypress.Commands.add('create', (model, times = 1, attributes = {}) => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/factory',
-                body: { attributes, model, times, _token: token },
+                body: { attributes, model, times, relations, _token: token },
                 log: false,
             });
         })

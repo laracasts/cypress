@@ -20,7 +20,8 @@ class CypressControllerTest extends TestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
-        $this->withFactories(__DIR__ . '/support/factories');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->withFactories(__DIR__ . '/database/factories');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }
@@ -118,6 +119,21 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_generates_an_eloquent_model_and_loads_the_requested_relations()
+    {
+        $response = $this->post(route('cypress.factory'), [
+            'model' => TestUser::class,
+            'attributes' => [
+                'name' => 'John Doe',
+            ],
+            'relations' => ['profile']
+        ]);
+
+
+        $this->assertEquals('USA', $response->json()['profile']['location']);
+    }
+
+    /** @test */
     public function it_generates_a_collection_of_eloquent_model_using_a_factory()
     {
         $response = $this->post(route('cypress.factory'), [
@@ -126,11 +142,11 @@ class CypressControllerTest extends TestCase
             'attributes' => [
                 'name' => 'John Doe',
             ],
+            'relations' => ['profile']
         ]);
 
         $this->assertEquals(2, TestUser::whereName('John Doe')->count());
         $this->assertCount(2, $response->json());
-        $this->assertEquals('John Doe', $response->json()[0]['name']);
     }
 
     /** @test */

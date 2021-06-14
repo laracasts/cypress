@@ -2,11 +2,10 @@
 
 namespace Laracasts\Cypress\Controllers;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class CypressController
 {
@@ -54,12 +53,16 @@ class CypressController
 
     public function factory(Request $request)
     {
-        $collection = $this->factoryBuilder($request->input('model'))
+        return $this->factoryBuilder($request->input('model'))
             ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'))
-            ->each->setHidden([]);
-
-        return $collection->count() > 1 ? $collection : $collection->first();
+            ->each->setHidden([])
+            ->load($request->input('relations', []))
+            ->pipe(function ($collection) {
+                return $collection->count() > 1
+                    ? $collection
+                    : $collection->first();
+            });
     }
 
     public function artisan(Request $request)
