@@ -213,7 +213,7 @@ test('it refreshes the list of Laravel named routes in memory', () => {
 
 ### cy.refreshDatabase()
 
-Trigger a `migrate:refresh` on your test database. Often, you'll apply this in a `beforeEach` call to ensure that,
+Trigger a `migrate:fresh` on your test database. Often, you'll apply this in a `beforeEach` call to ensure that,
 before each new test, your database is freshly migrated and cleaned up.
 
 ```js
