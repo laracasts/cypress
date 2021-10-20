@@ -28,15 +28,19 @@ class CypressController
     {
         $attributes = $request->input('attributes', []);
 
-        $user = app($this->userClassName())
-            ->newQuery()
-            ->where($attributes)
-            ->first();
+        if (empty($attributes)) {
+            $user = $this->factoryBuilder($this->userClassName())->create();
+        } else {
+            $user = app($this->userClassName())
+                ->newQuery()
+                ->where($attributes)
+                ->first();
 
-        if (!$user) {
-            $user = $this->factoryBuilder($this->userClassName())->create(
-                $attributes
-            );
+            if (!$user) {
+                $user = $this->factoryBuilder($this->userClassName())->create(
+                    $attributes
+                );
+            }
         }
 
         return tap($user, function ($user) {
