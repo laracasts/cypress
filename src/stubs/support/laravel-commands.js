@@ -102,6 +102,7 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
         return originalFn({
             url: Cypress.Laravel.route(subject.route, subject.parameters || {}),
             method: Cypress.Laravel.routes[subject.route].method[0],
+            ...options
         });
     }
 
