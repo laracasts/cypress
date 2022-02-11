@@ -1,6 +1,8 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace Laracasts\Cypress\Tests\Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Laracasts\Cypress\Tests\Support\TestUser;
 
 /*
@@ -8,17 +10,45 @@ use Laracasts\Cypress\Tests\Support\TestUser;
 | Model Factories
 |--------------------------------------------------------------------------
 |
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
+| Here you may define all of your model factories. Model factories give
+| you a convenient way to create models for testing and seeding your
+| database. Just tell the factory how a default model should look.
 |
 */
 
-$factory->define(TestUser::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'plan' => 'monthly',
-        'password' => 'foopassword',
-    ];
-});
+class UserFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = TestUser::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'plan' => 'monthly',
+            'password' => 'foopassword',
+        ];
+    }
+
+    public function guest()
+    {
+        return $this->state(
+            fn() => [
+                'stripe_id' => null,
+                'stripe_source' => null,
+                'stripe_plan' => 'none',
+                'stripe_active' => 0
+            ]
+        );
+    }
+}

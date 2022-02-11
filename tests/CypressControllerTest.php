@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Route;
 use Laracasts\Cypress\CypressServiceProvider;
 use Laracasts\Cypress\Tests\Support\TestUser;
 use Orchestra\Testbench\TestCase;
+use Spatie\LaravelRay\RayServiceProvider;
 
 class CypressControllerTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
-        return [CypressServiceProvider::class];
+        return [CypressServiceProvider::class, RayServiceProvider::class];
     }
 
     protected function setUp(): void
@@ -20,7 +21,6 @@ class CypressControllerTest extends TestCase
         parent::setUp();
 
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
-        $this->withFactories(__DIR__ . '/database/factories');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }
@@ -76,14 +76,9 @@ class CypressControllerTest extends TestCase
     /** @test */
     public function it_logs_an_existing_user_in_with_the_given_attribute()
     {
-        factory(TestUser::class)->create([
-            'name' => 'Joe',
-        ]);
+        TestUser::factory()->create(['name' => 'Joe']);
 
-        $frank = factory(TestUser::class)->create([
-            'name' => 'Frank',
-            'plan' => 'monthly',
-        ]);
+        $frank = TestUser::factory()->create(['name' => 'Frank', 'plan' => 'monthly']);
 
         $response = $this->post(route('cypress.login'), [
             'attributes' => ['name' => 'Frank', 'plan' => 'monthly'],
@@ -119,6 +114,21 @@ class CypressControllerTest extends TestCase
 
     /** @test */
     public function it_generates_an_eloquent_model_and_loads_the_requested_relations()
+    {
+        $response = $this->post(route('cypress.factory'), [
+            'model' => TestUser::class,
+            'attributes' => [
+                'name' => 'John Doe',
+            ],
+            'relations' => ['profile']
+        ]);
+
+
+        $this->assertEquals('USA', $response->json()['profile']['location']);
+    }
+
+    /** @test */
+    public function it_generates_an_eloquent_model_in_the_requested_state()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
