@@ -72,7 +72,6 @@ class CypressControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'Frank']);
-        $this->assertEquals('guest', $response->json()['plan']);
     }
 
     /** @test */
@@ -119,6 +118,25 @@ class CypressControllerTest extends TestCase
         $this->assertEquals('John Doe', $response->json()['name']);
         $this->assertEquals('USA', $response->json()['profile']['location']);
         $this->assertEquals('guest', $response->json()['plan']);
+    }
+
+    /** @test */
+    public function it_accepts_arguments_to_model_factory_states()
+    {
+        $response = $this->post(route('cypress.factory'), [
+            'model' => TestUser::class,
+            'state' => ['guest' => 'forum']
+        ]);
+
+        $this->assertEquals('forum', $response->json()['plan']);
+
+        // When passing an array of arguments.
+        $response = $this->post(route('cypress.factory'), [
+            'model' => TestUser::class,
+            'state' => ['guest' => ['forum']]
+        ]);
+
+        $this->assertEquals('forum', $response->json()['plan']);
     }
 
     /** @test */

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class CypressController
 {
@@ -113,10 +114,17 @@ class CypressController
 
     protected function factoryBuilder($model, $states = [])
     {
-        $factory = (new $model())->factory();
+        $factory = $model::factory();
 
-        foreach ($states as $state) {
-            $factory = $factory->{$state}();
+        foreach ($states as $state => $attributes) {
+            if (is_int($state)) {
+                $state = $attributes;
+                $attributes = [];
+            }
+
+            $attributes = Arr::wrap($attributes);
+
+            $factory = $factory->{$state}(...$attributes);
         }
 
         return $factory;
