@@ -13,7 +13,6 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import './commands';
 import './laravel-commands';
 import './laravel-routes';
 import './assertions';
