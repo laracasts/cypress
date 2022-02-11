@@ -64,17 +64,19 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_logs_a_new_user_in_with_the_given_attributes()
+    public function it_logs_a_user_in()
     {
-        $this->post(route('cypress.login'), [
+        $response = $this->post(route('cypress.login'), [
             'attributes' => ['name' => 'Frank'],
+            'state' => ['guest']
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'Frank']);
+        $this->assertEquals('guest', $response->json()['plan']);
     }
 
     /** @test */
-    public function it_logs_an_existing_user_in_with_the_given_attribute()
+    public function it_logs_an_existing_user_in()
     {
         TestUser::factory()->create(['name' => 'Joe']);
 
@@ -102,61 +104,31 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_generates_an_eloquent_model_using_a_factory()
+    public function it_builds_a_model_factory()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
             'attributes' => [
                 'name' => 'John Doe',
             ],
+            'load' => ['profile'],
+            'state' => ['guest']
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
         $this->assertEquals('John Doe', $response->json()['name']);
-    }
-
-    /** @test */
-    public function it_generates_an_eloquent_model_and_loads_the_requested_relations()
-    {
-        $response = $this->post(route('cypress.factory'), [
-            'model' => TestUser::class,
-            'attributes' => [
-                'name' => 'John Doe',
-            ],
-            'load' => ['profile'],
-        ]);
-
         $this->assertEquals('USA', $response->json()['profile']['location']);
-    }
-
-    /** @test */
-    public function it_generates_an_eloquent_model_in_the_requested_state()
-    {
-        $response = $this->post(route('cypress.factory'), [
-            'model' => TestUser::class,
-            'attributes' => [
-                'name' => 'John Doe',
-            ],
-            'load' => ['profile'],
-            'state' => ['guest'],
-        ]);
-
         $this->assertEquals('guest', $response->json()['plan']);
     }
 
     /** @test */
-    public function it_generates_a_collection_of_eloquent_model_using_a_factory()
+    public function it_builds_a_collection_of_model_factories()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'count' => 2,
-            'attributes' => [
-                'name' => 'John Doe',
-            ],
-            'load' => ['profile'],
+            'count' => 2
         ]);
 
-        $this->assertEquals(2, TestUser::whereName('John Doe')->count());
         $this->assertCount(2, $response->json());
     }
 
