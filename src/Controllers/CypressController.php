@@ -116,6 +116,8 @@ class CypressController
     {
         $factory = $model::factory();
 
+        $states = Arr::wrap($states);
+
         foreach ($states as $state => $attributes) {
             if (is_int($state)) {
                 $state = $attributes;
