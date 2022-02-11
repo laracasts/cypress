@@ -60,7 +60,7 @@ class CypressController
         return $this->factoryBuilder($request->input('model'))
             ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'))
-            ->each->setHidden([])
+            ->each(fn($model) => $model->setHidden([])->setVisible([]))
             ->load($request->input('relations', []))
             ->pipe(function ($collection) {
                 return $collection->count() > 1
