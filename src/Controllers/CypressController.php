@@ -48,6 +48,8 @@ class CypressController
             }
         }
 
+        $user->load($request->input('load', []));
+
         return tap($user, function ($user) {
             auth()->login($user);
 
