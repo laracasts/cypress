@@ -9,7 +9,7 @@
  */
 Cypress.Commands.add('login', (attributes = {}) => {
     // Are we using the new object system.
-    let requestBody = attributes.attributes ? attributes : { attributes };
+    let requestBody = attributes.attributes || attributes.state || attributes.load ? attributes : { attributes };
 
     return cy
         .csrfToken()
