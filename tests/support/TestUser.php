@@ -9,10 +9,8 @@ class TestUser extends Authenticatable
     protected $table = 'users';
     protected $hidden = ['plan'];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-
         static::created(function ($user) {
             $user->profile()->create(['location' => 'USA']);
         });
