@@ -25,7 +25,7 @@ Cypress.Commands.add('login', (attributes = {}) => {
 
             Cypress.log({
                 name: 'login',
-                message: attributes,
+                message: JSON.stringify(body),
                 consoleProps: () => ({ user: body }),
             });
         })
