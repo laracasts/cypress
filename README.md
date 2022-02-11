@@ -7,8 +7,8 @@ This package provides the necessary boilerplate to quickly begin testing your La
 ## Table of Contents
 
 - [Installation](#installation)
-- [Environment Handling](#environment-handling)
 - [Routing](#routing)
+- [Environment Handling](#environment-handling)
 - [API](#api)
 
 ## Installation
@@ -79,48 +79,6 @@ after(() => {
 ```
 
 That should do it!
-
-## Routing
-
-Each time your test suite runs, this package will fetch all named routes for your Laravel application, 
-and store them in memory. You'll additionally find a `./cypress/support/routes.json` file that contains a dump of this JSON.
-
-This package overrides the base `cy.visit()` method to allow for optionally passing a `route` name instead of a URL.
-
-```js
-test('it loads the about page using a named route', () => {
-    cy.visit({
-        route: 'about'
-    });
-});
-```
-
-If the named route requires a wildcard, you may include it using the `parameters` property.
-
-```js
-test('it loads the team dashboard page using a named route', () => {
-    cy.visit({
-        route: 'team.dashboard',
-        parameters: { team: 1 }
-    });
-});
-```
-
-Should you need to access the full list of routes for your application, use the `Cypress.Laravel.routes` property.
-
-```js
-// Get an array of all routes for your app.
-
-Cypress.Laravel.routes; // ['home' => []]
-```
-
-Further, if you need to translate a named route to its associated URL, instead use the `Cypress.Laravel.route()` method, like so:
-
-```js
-Cypress.Laravel.route('about'); // /about-page
-
-Cypress.Laravel.route('team.dashboard', { team: 1 }); // /teams/1/dashboard
-```
 
 ## API
 
@@ -288,6 +246,48 @@ test('it can evaluate PHP', () => {
 
 Be thoughtful when you reach for this command, but it might prove useful in instances where it's vital that you verify the state of the application or database in response to a certain action. It could also be used 
 for setting up the "world" for your test. That said, a targeted database seeder - using `cy.seed()` - will typically be the better approach.
+
+## Routing
+
+Each time your test suite runs, this package will fetch all named routes for your Laravel application,
+and store them in memory. You'll additionally find a `./cypress/support/routes.json` file that contains a dump of this JSON.
+
+This package overrides the base `cy.visit()` method to allow for optionally passing a `route` name instead of a URL.
+
+```js
+test('it loads the about page using a named route', () => {
+    cy.visit({
+        route: 'about'
+    });
+});
+```
+
+If the named route requires a wildcard, you may include it using the `parameters` property.
+
+```js
+test('it loads the team dashboard page using a named route', () => {
+    cy.visit({
+        route: 'team.dashboard',
+        parameters: { team: 1 }
+    });
+});
+```
+
+Should you need to access the full list of routes for your application, use the `Cypress.Laravel.routes` property.
+
+```js
+// Get an array of all routes for your app.
+
+Cypress.Laravel.routes; // ['home' => []]
+```
+
+Further, if you need to translate a named route to its associated URL, instead use the `Cypress.Laravel.route()` method, like so:
+
+```js
+Cypress.Laravel.route('about'); // /about-page
+
+Cypress.Laravel.route('team.dashboard', { team: 1 }); // /teams/1/dashboard
+```
 
 ### Security
 
