@@ -168,6 +168,7 @@ Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], st
             Cypress.log({
                 name: 'create',
                 message: model + (times ? `(${times} times)` : ''),
+                message: requestBody.model + (requestBody.count > 1 ? ` (${requestBody.count} times)` : ''),
                 consoleProps: () => ({ [model]: response.body }),
             });
         })
