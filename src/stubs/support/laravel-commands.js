@@ -5,6 +5,7 @@
  *
  * @example cy.login();
  *          cy.login({ name: 'JohnDoe' });
+ *          cy.login({ attributes: { name: 'JohnDoe' }, state: 'guest', load: ['comments] });
  */
 Cypress.Commands.add('login', (attributes = {}) => {
     // Are we using the new object system.
@@ -32,6 +33,7 @@ Cypress.Commands.add('login', (attributes = {}) => {
         .its('body', { log: false });
 });
 
+
 /**
  * Logout the current user.
  *
@@ -53,6 +55,7 @@ Cypress.Commands.add('logout', () => {
         });
 });
 
+
 /**
  * Fetch a CSRF token.
  *
@@ -67,6 +70,7 @@ Cypress.Commands.add('csrfToken', () => {
         })
         .its('body', { log: false });
 });
+
 
 /**
  * Fetch and store all named routes.
@@ -93,6 +97,7 @@ Cypress.Commands.add('refreshRoutes', () => {
     });
 });
 
+
 /**
  * Visit the given URL or route.
  *
@@ -110,6 +115,7 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
 
     return originalFn(subject, options);
 });
+
 
 /**
  * Create a new Eloquent factory.
@@ -167,13 +173,13 @@ Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], st
         .then((response) => {
             Cypress.log({
                 name: 'create',
-                message: model + (times ? `(${times} times)` : ''),
                 message: requestBody.model + (requestBody.count > 1 ? ` (${requestBody.count} times)` : ''),
                 consoleProps: () => ({ [model]: response.body }),
             });
         })
         .its('body', { log: false });
 });
+
 
 /**
  * Refresh the database state.
@@ -186,6 +192,7 @@ Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], st
 Cypress.Commands.add('refreshDatabase', (options = {}) => {
     return cy.artisan('migrate:fresh', options);
 });
+
 
 /**
  * Seed the database.
@@ -200,6 +207,7 @@ Cypress.Commands.add('seed', (seederClass) => {
         '--class': seederClass,
     });
 });
+
 
 /**
  * Trigger an Artisan command.
@@ -230,6 +238,7 @@ Cypress.Commands.add('artisan', (command, parameters = {}, options = {}) => {
         });
     });
 });
+
 
 /**
  * Execute arbitrary PHP.
