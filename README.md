@@ -13,7 +13,7 @@ This package provides the necessary boilerplate to quickly begin testing your La
 
 ## Installation
 
-If you haven't already installed [Cypress](https://www.cypress.io/), that's your first step.
+If you haven't already installed [Cypress](https://www.cypress.io/); that's your first step.
 
 ```bash
 npm install cypress --save-dev && npx cypress open
@@ -130,7 +130,7 @@ We allow for this by exposing a handful of Cypress-specific endpoints in your ap
 
 ### cy.login()
 
-Finds an existing user matching the optional attributes provided and set it as the authenticated user for the test. Create a new user record if not found. 
+Find an existing user matching the optional attributes provided and set it as the authenticated user for the test. If not found, it'll create a new user and log it in.
 
 ```js
 test('authenticated users can see the dashboard', () => {
@@ -140,9 +140,24 @@ test('authenticated users can see the dashboard', () => {
 });
 ```
 
+Should you need to also eager load relationships on the user model or put in a certain model factory state before it's returned from the server, instead pass an object to `cy.login()`, like so:
+
+```js
+test('authenticated users can see the dashboard', () => {
+    cy.login({
+        attributes: { username: 'JohnDoe' },
+        state: ['guest'],
+        load: ['profile']
+    });
+
+    cy.visit('/dashboard').contains('Welcome Back, JohnDoe!');
+});
+```
+
+
 ### cy.logout()
 
-Log out the currently authenticated user. Equivalent to `auth()->logout()`.
+Log out the currently authenticated user. Equivalent to Laravel's `auth()->logout()`.
 
 ```js
 test('once a user logs out they cannot see the dashboard', () => {
@@ -176,29 +191,23 @@ You may optionally specify the number of records you require as the second argum
 
 ```js
 test('it shows blog posts', () => {
-  cy.create('App\\Post', 3);
+  cy.create('App\\Post', 3, { title: 'My First Post' });
 });
 ```
 
-Alternatively, if you pass an object as the second argument to `cy.create()`, you can override any default attributes for the factory call.
+Lastly, you can instead pass an object to `cy.create()`. This should be the preferred choice, if you need to eager load relationships or create the model record in a given model factory state.
 
 ```js
 test('it shows blog posts', () => {
-    cy.create('App\\Post', { title: 'My First Post' });
-
-    //
+    cy.create({
+        model: 'App\\Post',
+        attributes: { title: 'My First Post' },
+        state: ['archived'],
+        load: ['author'],
+        count: 10
+    })
 });
 ```
-
-Lastly, you can request that certain model relationships be loaded and returned as part of the JSON response. 
-
-```js
-test('it shows blog posts', () => {
-    cy.create('App\\Post', { title: 'My First Post' }, ['author']);
-});
-```
-
-As you can see, the `cy.create()` argument list is dynamic to make for a simpler API.
 
 ### cy.refreshRoutes()
 
