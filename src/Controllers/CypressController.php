@@ -46,7 +46,7 @@ class CypressController
         return tap($user, function ($user) {
             auth()->login($user);
 
-            $user->setHidden([]);
+            $user->setHidden([])->setVisible([]);
         });
     }
 
