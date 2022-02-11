@@ -29,7 +29,10 @@ class CypressController
         $attributes = $request->input('attributes', []);
 
         if (empty($attributes)) {
-            $user = $this->factoryBuilder($this->userClassName())->create();
+            $user = $this->factoryBuilder(
+                $this->userClassName(),
+                $request->input('state', [])
+            )->create();
         } else {
             $user = app($this->userClassName())
                 ->newQuery()
@@ -37,9 +40,10 @@ class CypressController
                 ->first();
 
             if (!$user) {
-                $user = $this->factoryBuilder($this->userClassName())->create(
-                    $attributes
-                );
+                $user = $this->factoryBuilder(
+                    $this->userClassName(),
+                    $request->input('state', [])
+                )->create($attributes);
             }
         }
 
@@ -57,11 +61,14 @@ class CypressController
 
     public function factory(Request $request)
     {
-        return $this->factoryBuilder($request->input('model'))
-            ->times(intval($request->input('times', 1)))
+        return $this->factoryBuilder(
+            $request->input('model'),
+            $request->input('state', [])
+        )
+            ->count(intval($request->input('count', 1)))
             ->create($request->input('attributes'))
             ->each(fn($model) => $model->setHidden([])->setVisible([]))
-            ->load($request->input('relations', []))
+            ->load($request->input('load', []))
             ->pipe(function ($collection) {
                 return $collection->count() > 1
                     ? $collection
@@ -104,13 +111,14 @@ class CypressController
         return config('auth.providers.users.model');
     }
 
-    protected function factoryBuilder($model)
+    protected function factoryBuilder($model, $states = [])
     {
-        // Should we use legacy factories?
-        if (class_exists('Illuminate\Database\Eloquent\Factory')) {
-            return factory($model);
+        $factory = (new $model())->factory();
+
+        foreach ($states as $state) {
+            $factory = $factory->{$state}();
         }
 
-        return (new $model())->factory();
+        return $factory;
     }
 }

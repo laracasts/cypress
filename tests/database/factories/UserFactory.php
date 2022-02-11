@@ -44,10 +44,7 @@ class UserFactory extends Factory
     {
         return $this->state(
             fn() => [
-                'stripe_id' => null,
-                'stripe_source' => null,
-                'stripe_plan' => 'none',
-                'stripe_active' => 0
+                'plan' => 'guest'
             ]
         );
     }

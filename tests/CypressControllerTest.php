@@ -20,7 +20,7 @@ class CypressControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }
@@ -78,7 +78,10 @@ class CypressControllerTest extends TestCase
     {
         TestUser::factory()->create(['name' => 'Joe']);
 
-        $frank = TestUser::factory()->create(['name' => 'Frank', 'plan' => 'monthly']);
+        $frank = TestUser::factory()->create([
+            'name' => 'Frank',
+            'plan' => 'monthly',
+        ]);
 
         $response = $this->post(route('cypress.login'), [
             'attributes' => ['name' => 'Frank', 'plan' => 'monthly'],
@@ -120,9 +123,8 @@ class CypressControllerTest extends TestCase
             'attributes' => [
                 'name' => 'John Doe',
             ],
-            'relations' => ['profile']
+            'load' => ['profile'],
         ]);
-
 
         $this->assertEquals('USA', $response->json()['profile']['location']);
     }
@@ -135,11 +137,11 @@ class CypressControllerTest extends TestCase
             'attributes' => [
                 'name' => 'John Doe',
             ],
-            'relations' => ['profile']
+            'load' => ['profile'],
+            'state' => ['guest'],
         ]);
 
-
-        $this->assertEquals('USA', $response->json()['profile']['location']);
+        $this->assertEquals('guest', $response->json()['plan']);
     }
 
     /** @test */
@@ -147,11 +149,11 @@ class CypressControllerTest extends TestCase
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'times' => 2,
+            'count' => 2,
             'attributes' => [
                 'name' => 'John Doe',
             ],
-            'relations' => ['profile']
+            'load' => ['profile'],
         ]);
 
         $this->assertEquals(2, TestUser::whereName('John Doe')->count());
@@ -178,7 +180,7 @@ class CypressControllerTest extends TestCase
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'times' => 2,
+            'count' => 2,
             'attributes' => [
                 'name' => 'John Doe',
             ],

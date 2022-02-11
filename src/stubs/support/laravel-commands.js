@@ -7,13 +7,16 @@
  *          cy.login({ name: 'JohnDoe' });
  */
 Cypress.Commands.add('login', (attributes = {}) => {
+    // Are we using the new object system.
+    let requestBody = attributes.attributes ? attributes : { attributes };
+
     return cy
         .csrfToken()
         .then((token) => {
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/login',
-                body: { attributes, _token: token },
+                body: { ...requestBody, _token: token },
                 log: false,
             });
         })
@@ -121,20 +124,34 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
  *          cy.create('App\\User', { active: false });
  *          cy.create('App\\User', 2, { active: false });
  *          cy.create('App\\User', 2, { active: false }, ['profile']);
+ *          cy.create('App\\User', 2, { active: false }, ['profile'], ['guest']);
  *          cy.create('App\\User', { active: false }, ['profile']);
+ *          cy.create('App\\User', { active: false }, ['profile'], ['guest']);
  *          cy.create('App\\User', ['profile']);
+ *          cy.create('App\\User', ['profile'], ['guest']);
+ *          cy.create({ model: 'App\\User', state: ['guest'], relations: ['profile'], count: 2 }
  */
-Cypress.Commands.add('create', (model, times = 1, attributes = {}, relations = []) => {
-    if (Array.isArray(times)) {
-        attributes = {};
-        relations = times;
-        times = 1;
-    }
+Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], state = []) => {
+    let requestBody = {};
 
-    if (typeof times === 'object') {
-        relations = attributes;
-        attributes = times;
-        times = 1;
+    if (typeof model !== 'object') {
+        if (Array.isArray(count)) {
+            state = attributes;
+            attributes = {};
+            load = count;
+            count = 1;
+        }
+
+        if (typeof count === 'object') {
+            state = load;
+            load = attributes;
+            attributes = count;
+            count = 1;
+        }
+
+        requestBody = { model, state, attributes, load, count };
+    } else {
+        requestBody = model;
     }
 
     return cy
@@ -143,7 +160,7 @@ Cypress.Commands.add('create', (model, times = 1, attributes = {}, relations = [
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/factory',
-                body: { attributes, model, times, relations, _token: token },
+                body: { ...requestBody, _token: token },
                 log: false,
             });
         })
