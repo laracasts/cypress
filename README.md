@@ -7,9 +7,9 @@ This package provides the necessary boilerplate to quickly begin testing your La
 ## Table of Contents
 
 - [Installation](#installation)
-- [Routing](#routing)
 - [Environment Handling](#environment-handling)
 - [API](#api)
+- [Routing](#routing)
 
 ## Installation
 
