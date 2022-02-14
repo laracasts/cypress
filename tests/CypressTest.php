@@ -45,6 +45,7 @@ class CypressTest extends TestCase
             'cypress.run-php',
             'cypress.csrf-token',
             'cypress.routes',
+            'cypress.current-user'
         ]);
     }
 
