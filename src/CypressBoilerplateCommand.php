@@ -37,6 +37,7 @@ class CypressBoilerplateCommand extends Command
             __DIR__ . '/stubs/support',
             base_path('cypress/support')
         );
+        
         $this->files->copyDirectory(
             __DIR__ . '/stubs/plugins',
             base_path('cypress/plugins')
@@ -50,6 +51,7 @@ class CypressBoilerplateCommand extends Command
         $this->status('Created', 'cypress/support/laravel-commands.js');
         $this->status('Created', 'cypress/support/laravel-routes.js');
         $this->status('Created', 'cypress/support/assertions.js');
+        $this->status('Created', 'cypress/support/index.d.ts');
 
         if (!$this->files->exists($path = base_path('.env.cypress'))) {
             $this->files->copy(base_path('.env'), $path);
