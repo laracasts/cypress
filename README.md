@@ -117,7 +117,7 @@ test('authenticated users can see the dashboard', () => {
 Fetch the currently authenticated user object from the server, if any. Equivalent to Laravel's `auth()->user()`.
 
 ```js
-test('authenticated users can see the dashboard', () => {
+test('assert the current user has email', () => {
     cy.login({ email: 'joe@example.com' });
 
     cy.currentUser().its('email').should('eq', 'joe@example.com');
