@@ -57,6 +57,11 @@ class CypressController
         });
     }
 
+    public function currentUser()
+    {
+        return auth()->user()?->setHidden([])->setVisible([]);
+    }
+
     public function logout()
     {
         auth()->logout();

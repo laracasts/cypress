@@ -10,3 +10,4 @@ Route::post('/__cypress__/artisan', [CypressController::class, 'artisan'])->name
 Route::post('/__cypress__/run-php', [CypressController::class, 'runPhp'])->name('cypress.run-php');
 Route::get('/__cypress__/csrf_token', [CypressController::class, 'csrfToken'])->name('cypress.csrf-token');
 Route::post('/__cypress__/routes', [CypressController::class, 'routes'])->name('cypress.routes');
+Route::post('/__cypress__/current-user', [CypressController::class, 'currentUser'])->name('cypress.current-user');

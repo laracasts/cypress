@@ -33,6 +33,32 @@ Cypress.Commands.add('login', (attributes = {}) => {
         .its('body', { log: false });
 });
 
+/**
+ * Fetch the currently authenticated user object.
+ *
+ * @example cy.currentUser();
+ */
+Cypress.Commands.add('currentUser', () => {
+    return cy.csrfToken().then((token) => {
+        return cy
+            .request({
+                method: 'POST',
+                url: '/__cypress__/current-user',
+                body: { _token: token },
+                log: false,
+            })
+            .then((response) => {
+                if (!response.body) {
+                    cy.log('No authenticated user found.');
+                }
+
+                Cypress.Laravel.currentUser = response?.body;
+
+                return response?.body;
+            });
+    });
+});
+
 
 /**
  * Logout the current user.
@@ -55,7 +81,6 @@ Cypress.Commands.add('logout', () => {
         });
 });
 
-
 /**
  * Fetch a CSRF token.
  *
@@ -70,7 +95,6 @@ Cypress.Commands.add('csrfToken', () => {
         })
         .its('body', { log: false });
 });
-
 
 /**
  * Fetch and store all named routes.
@@ -97,7 +121,6 @@ Cypress.Commands.add('refreshRoutes', () => {
     });
 });
 
-
 /**
  * Visit the given URL or route.
  *
@@ -115,7 +138,6 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
 
     return originalFn(subject, options);
 });
-
 
 /**
  * Create a new Eloquent factory.
@@ -180,7 +202,6 @@ Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], st
         .its('body', { log: false });
 });
 
-
 /**
  * Refresh the database state.
  *
@@ -192,7 +213,6 @@ Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], st
 Cypress.Commands.add('refreshDatabase', (options = {}) => {
     return cy.artisan('migrate:fresh', options);
 });
-
 
 /**
  * Seed the database.
@@ -207,7 +227,6 @@ Cypress.Commands.add('seed', (seederClass) => {
         '--class': seederClass,
     });
 });
-
 
 /**
  * Trigger an Artisan command.
@@ -246,7 +265,6 @@ Cypress.Commands.add('artisan', (command, parameters = {}, options = {}) => {
         });
     });
 });
-
 
 /**
  * Execute arbitrary PHP.

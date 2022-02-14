@@ -52,6 +52,17 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_fetches_the_currently_authenticated_user()
+    {
+        $this->post(route('cypress.login'), ['attributes' => ['email' => 'joe@example.com']]);
+
+        $response = $this->post(route('cypress.current-user'));
+
+        $this->assertNotNull($response->json());
+        $this->assertEquals('joe@example.com', $response->json()['email']);
+    }
+
+    /** @test */
     public function it_makes_all_logged_in_user_attributes_visible()
     {
         $response = $this->post(route('cypress.login'));
@@ -66,7 +77,7 @@ class CypressControllerTest extends TestCase
     /** @test */
     public function it_logs_a_user_in()
     {
-        $response = $this->post(route('cypress.login'), [
+        $this->post(route('cypress.login'), [
             'attributes' => ['name' => 'Frank'],
             'state' => ['guest']
         ]);

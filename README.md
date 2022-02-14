@@ -112,6 +112,24 @@ test('authenticated users can see the dashboard', () => {
 });
 ```
 
+### cy.currentUser()
+
+Fetch the currently authenticated user object from the server, if any. Equivalent to Laravel's `auth()->user()`.
+
+```js
+test('authenticated users can see the dashboard', () => {
+    cy.login({ email: 'joe@example.com' });
+
+    cy.currentUser().its('email').should('eq', 'joe@example.com');
+    
+    // or...
+    
+    cy.currentUser().then(user => {
+        expect(user.email).to.eql('joe@example.com');
+    });
+});
+```
+
 
 ### cy.logout()
 
