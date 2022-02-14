@@ -212,7 +212,7 @@ php artisan db:seed --class=PlansTableSeeder --env=acceptance
 
 ### cy.artisan()
 
-Trigger any Artisan command under the current environment for the Cypress test. Remember to proceed options with two dashes, as usual.
+Trigger any Artisan command under the current environment for the Cypress test. Remember to precede options with two dashes, as usual.
 
 ```js
 test('it can create posts through the command line', () => {
