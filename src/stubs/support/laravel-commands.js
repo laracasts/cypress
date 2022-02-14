@@ -224,7 +224,15 @@ Cypress.Commands.add('artisan', (command, parameters = {}, options = {}) => {
     if (options.log) {
         Cypress.log({
             name: 'artisan',
-            message: command,
+            message: (() => {
+                let message = command;
+
+                for (let key in parameters) {
+                    message += ` ${key}="${parameters[key]}"`;
+                }
+
+                return message;
+            })(),
             consoleProps: () => ({ command, parameters }),
         });
     }
