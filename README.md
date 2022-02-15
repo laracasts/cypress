@@ -19,22 +19,8 @@ If you haven't already installed [Cypress](https://www.cypress.io/); that's your
 npm install cypress --save-dev && npx cypress open
 ```
 
-As part of the initial `npx cypress open` command, Cypress will add a `./cypress` directory to your project root, 
+As part of the initial `npx cypress open` command, Cypress will instantly create a `./cypress` directory in your project root, 
 as well as a `cypress.json` configuration file.
-
-You'll almost always want to set a `baseUrl` for your Cypress tests, so do so now within `cypress.json`.
-
-```json
-{
-  "baseUrl": "http://my-app.test"
-}
-```
-
-When making requests through Cypress, this `baseUrl` path will be prepended to any relative URL you provide.
-
-```js
-cy.visit('/foo'); // http://my-app.test/foo
-```
 
 Now you're ready to install this package through Composer. Pull it in as a development-only dependency.
 
@@ -48,7 +34,8 @@ Finally, run the `cypress:boilerplate` command to copy over the initial boilerpl
 php artisan cypress:boilerplate
 ```
 
-That's it! You're ready to go.
+That's it! You're ready to go. We've declared some initial settings in your project's `cypress.json` file. Have a look real quick and make sure 
+everything is in order. In particular, please ensure that the `baseUrl` property is set correctly (we default to your app's `APP_URL` environment setting).
 
 ## Environment Handling
 
@@ -98,7 +85,7 @@ test('authenticated users can see the dashboard', () => {
 });
 ```
 
-Should you need to also eager load relationships on the user model or put in a certain model factory state before it's returned from the server, instead pass an object to `cy.login()`, like so:
+Should you need to also eager load relationships on the user model or specifiy a certain model factory state before it's returned from the server, instead pass an object to `cy.login()`, like so:
 
 ```js
 test('authenticated users can see the dashboard', () => {
@@ -112,9 +99,17 @@ test('authenticated users can see the dashboard', () => {
 });
 ```
 
+If written in PHP, this object would effectively translate to: 
+
+```php
+$user = User::factory()->guest()->create([ 'username' => 'JohnDoe' ])->load('profile');
+
+auth()->login($user);
+````
+
 ### cy.currentUser()
 
-Fetch the currently authenticated user object from the server, if any. Equivalent to Laravel's `auth()->user()`.
+Fetch the currently authenticated user from the server, if any. Equivalent to Laravel's `auth()->user()`.
 
 ```js
 test('assert the current user has email', () => {
@@ -129,7 +124,6 @@ test('assert the current user has email', () => {
     });
 });
 ```
-
 
 ### cy.logout()
 
@@ -171,7 +165,7 @@ test('it shows blog posts', () => {
 });
 ```
 
-Lastly, you can instead pass an object to `cy.create()`. This should be the preferred choice, if you need to eager load relationships or create the model record in a given model factory state.
+Lastly, you can alternatively pass an object to `cy.create()`. This should be the preferred choice, if you need to eager load relationships or create the model record in a given model factory state.
 
 ```js
 test('it shows blog posts', () => {
@@ -185,9 +179,17 @@ test('it shows blog posts', () => {
 });
 ```
 
+If written in PHP, this object would effectively translate to:
+
+```php
+$user = \App\Post::factory(10)->archived()->create([ 'title' => 'My First Post' ])->load('author');
+
+auth()->login($user);
+````
+
 ### cy.refreshRoutes()
 
-Before your Cypress test suite begins, this package will automatically fetch a collection of all named routes for your Laravel app and store them in memory.
+Before your Cypress test suite run, this package will automatically fetch a collection of all named routes for your Laravel app and store them in memory.
 You shouldn't need to manually call this method, however, it's available to you if your routing will change as side effect of a particular test.
 
 ```js
