@@ -4,6 +4,10 @@ This package provides the necessary boilerplate to quickly begin testing your La
 
 <img src="https://user-images.githubusercontent.com/183223/89684657-e2e5ef00-d8c8-11ea-825c-ed5b5acc37a4.png" width="300">
 
+## Video Tour
+
+If you'd prefer a more visual review of this package, [please watch this video](https://laracasts.com/series/jeffreys-larabits/episodes/22) on Laracasts.
+
 ## Table of Contents
 
 - [Installation](#installation)
