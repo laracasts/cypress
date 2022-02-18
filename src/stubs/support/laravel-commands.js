@@ -223,10 +223,14 @@ Cypress.Commands.add('refreshDatabase', (options = {}) => {
  * @example cy.seed();
  *          cy.seed('PlansTableSeeder');
  */
-Cypress.Commands.add('seed', (seederClass) => {
-    return cy.artisan('db:seed', {
-        '--class': seederClass,
-    });
+Cypress.Commands.add('seed', (seederClass = '') => {
+    let options = {};
+
+    if (seederClass) {
+        options['--class'] = seederClass;
+    }
+
+    return cy.artisan('db:seed', options);
 });
 
 /**
