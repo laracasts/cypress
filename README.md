@@ -54,13 +54,18 @@ DB_CONNECTION=mysql
 DB_DATABASE=cypress
 ```
 
-When running your Cypress tests, this package will automatically back up your primary `.env` file, and swap it out with `env.cypress`.
+When running your Cypress tests, this package, by default, will automatically back up your primary `.env` file, and swap it out with `env.cypress`.
 Once complete, of course the environment files will be reset to how they originally were.
 
 > All Cypress tests run according to the environment specified in `.env.cypress`.
 
-However, when your Cypress tests fail, it can often be useful to manually browse your application in the exact state that triggered the test failure. You can't do this if 
-your environment is automatically reverted after each test run. To solve this, temporarily disable the Cypress task that resets the environment. Visit `cypress/support/index.js` and comment 
+However, when your Cypress tests fail, it can often be useful to manually **browse your application in the exact state that triggered the test failure**. You can't do this if your environment is automatically reverted after each test run. 
+
+To solve this, you have two choices:
+
+#### Option 1:
+
+Temporarily disable the Cypress task that resets the environment. Visit `cypress/support/index.js` and comment 
 out this portion.
 
 ```js
@@ -69,7 +74,40 @@ after(() => {
 });
 ```
 
-That should do it!
+That should do it! Just remember to manually revert to your local .env file when you're done performing your Cypress tests.
+
+#### Option 2:
+
+When booting a server with `php artisan serve`, you can optionally pass an `--env` flag to specify your desired environment for the application.
+
+```
+php artisan serve --env="cypress"
+```
+
+^ This command instructs Laravel to boot up a server and use the configuration that is declared in `.env.cypress`.
+
+Now visit `cypress.json` and change the `baseUrl` to point to your local server.
+
+```
+{
+  "baseUrl": "http://127.0.0.1:8000"
+}
+```
+
+And you're all set! I'd recommend creating an npm script to simplify this process. Open `package.json`, and add:
+
+```
+{
+  "scripts": {
+    "test:cypress": "php artisan serve --env=cypress & cypress open"
+  }
+}
+```
+
+Now from the command line, you can run `npm run test:cypress` to start a local server and open Cypress.
+
+If you choose this second option, visit `cypress/support/index.js` and delete the `activateCypressEnvFile` and `activateLocalEnvFile` tasks, [as shown here](https://github.com/laracasts/cypress/blob/master/src/stubs/support/index.js#L23). They're no longer required, as you'll be handling the environment handling yourself.
+
 
 ## API
 
