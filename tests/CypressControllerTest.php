@@ -2,6 +2,7 @@
 
 namespace Laracasts\Cypress\Tests;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Laracasts\Cypress\CypressServiceProvider;
@@ -123,6 +124,28 @@ class CypressControllerTest extends TestCase
             ],
             'load' => ['profile'],
             'state' => ['guest']
+        ]);
+
+        $this->assertDatabaseHas('users', ['name' => 'John Doe']);
+        $this->assertEquals('John Doe', $response->json()['name']);
+        $this->assertEquals('USA', $response->json()['profile']['location']);
+        $this->assertEquals('guest', $response->json()['plan']);
+    }
+
+    /** @test */
+    public function it_builds_a_model_factory_by_its_morph_name()
+    {
+        Relation::morphMap([
+            'test_user' => TestUser::class,
+        ]);
+
+        $response = $this->post(route('cypress.factory'), [
+            'model' => 'test_user',
+            'attributes' => [
+                'name' => 'John Doe',
+            ],
+            'load' => ['profile'],
+            'state' => ['guest'],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);

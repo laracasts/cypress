@@ -2,6 +2,7 @@
 
 namespace Laracasts\Cypress\Controllers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -121,6 +122,7 @@ class CypressController
 
     protected function factoryBuilder($model, $states = [])
     {
+        $model = Relation::getMorphedModel($model) ?? $model;
         $factory = $model::factory();
 
         $states = Arr::wrap($states);
