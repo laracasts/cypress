@@ -4,6 +4,7 @@ namespace Laracasts\Cypress;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 
 class CypressBoilerplateCommand extends Command
 {
@@ -35,7 +36,7 @@ class CypressBoilerplateCommand extends Command
      */
     public function handle()
     {
-        if (!$this->files->exists(base_path('cypress'))) {
+        if (! $this->isCypressInstalled()) {
             $this->requireCypressInstall();
 
             return;
@@ -71,7 +72,7 @@ class CypressBoilerplateCommand extends Command
 
         $this->createCypressConfig();
 
-        if (!$this->files->exists($path = base_path('.env.cypress'))) {
+        if (! $this->files->exists($path = base_path('.env.cypress'))) {
             $this->files->copy(base_path('.env'), $path);
 
             $this->status('Created', '.env.cypress');
@@ -84,6 +85,45 @@ class CypressBoilerplateCommand extends Command
      * Set the initial cypress.json configuration for the project.
      */
     protected function createCypressConfig(): void
+    {
+        match (true) {
+            str_starts_with($this->cypressVersion(), '^10') => $this->cypressConfig(),
+            default => $this->cypressOlderConfig()
+        };
+    }
+
+    /**
+     * For Cypress 10
+     * Set the initial cypress.config.js configuration for the project.
+     */
+    protected function cypressConfig()
+    {
+        if (! $this->option('force') && $this->files->exists($this->cypressConfigPath())) {
+            $this->warn('Existing Cypress configuration file found');
+            $overwrite = $this->confirm('Do you want to overwrite the existing configuration?', 'y');
+            if(! $overwrite) {
+                $this->info('Please upgrade the file manually.');
+                return;
+            }
+        }
+
+        $this->files->put(
+            $this->cypressConfigPath(),
+            str_replace(
+                ['%baseUrl%', '%cypressPath%'],
+                [config('app.url'), $this->cypressPath('', false)],
+                $this->files->get(__DIR__ . '/stubs/cypress.config.js')
+            )
+        );
+
+        $this->status('Created', $this->cypressConfigPath(false));
+    }
+
+    /**
+     * For Cypress version below 10
+     * Set the initial cypress.json configuration for the project.
+     */
+    protected function cypressOlderConfig()
     {
         $config = [];
         $configExists = $this->files->exists($this->cypressConfigPath());
@@ -168,5 +208,29 @@ npm install cypress --save-dev && npx cypress open
 
 EOT
         );
+    }
+
+    /**
+     * Check whether cypress is installed or not from pcakage.json.
+     */
+    protected function isCypressInstalled(): bool
+    {
+        return Arr::get($this->getPackageJson(), 'devDependencies.cypress') || Arr::get($this->getPackageJson(), 'dependencies.cypress');
+    }
+
+    /**
+     * Get the package.json file from the consuming app.
+     */
+    protected function getPackageJson(): array
+    {
+        return $this->files->exists(base_path('pcakage.json')) ? json_decode(base_path('package.json'), true) : [];
+    }
+
+    /**
+     * Determine the installed version for cypress.
+     */
+    protected function cypressVersion(): ?string
+    {
+        return Arr::get($this->getPackageJson(), 'devDependencies.cypress', Arr::get($this->getPackageJson(), 'dependencies.cypress'), null);
     }
 }
