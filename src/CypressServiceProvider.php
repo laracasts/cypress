@@ -10,7 +10,7 @@ class CypressServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/cypress.php', 'cypress'
+            __DIR__.'/../config/cypress.php', 'cypress'
         );
 
         $excludedEnvironments = config('cypress.exclude');
