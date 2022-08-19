@@ -133,7 +133,7 @@ test('authenticated users can see the dashboard', () => {
 });
 ```
 
-Should you need to also eager load relationships on the user model or specifiy a certain model factory state before it's returned from the server, instead pass an object to `cy.login()`, like so:
+Should you need to also eager load relationships on the user model or specify a certain model factory state before it's returned from the server, instead pass an object to `cy.login()`, like so:
 
 ```js
 test('authenticated users can see the dashboard', () => {
