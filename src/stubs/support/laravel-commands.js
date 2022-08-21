@@ -141,6 +141,19 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
 });
 
 /**
+ * Visit the given route.
+ *
+ * @example cy.visitRoute('home');
+ *          cy.visitRoute('team', { parameters: { team: 1 } });
+ */
+ Cypress.Commands.add("visitRoute", (routeName, ...options) => {
+    return cy.visit({
+        route: routeName,
+        ...options,
+    });
+ });
+
+/**
  * Create a new Eloquent factory.
  *
  * @param {String} model
