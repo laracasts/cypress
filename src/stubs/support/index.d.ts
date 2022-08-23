@@ -52,7 +52,7 @@ declare namespace Cypress {
          * cy.create('App\\User', 2, { active: false });
          * cy.create({ model: 'App\\User', state: ['guest'], relations: ['profile'], count: 2 }
          */
-        create(): Chainable<any>;
+        create(model: string, count?: number | object | string[] | null, attributes?: object, load?: string[], state?: string[]): Chainable<any>;
 
         /**
          * Refresh the database state using Laravel's migrate:fresh command.
