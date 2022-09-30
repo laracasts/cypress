@@ -4,13 +4,14 @@ namespace Laracasts\Cypress;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 
 class CypressBoilerplateCommand extends Command
 {
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'cypress:boilerplate { --config-path=cypress.json }';
+    protected $signature = 'cypress:boilerplate { --config-path=cypress.config.js } { --force : Recreate existing configuration file }';
 
     /**
      * The console command description.
@@ -35,8 +36,14 @@ class CypressBoilerplateCommand extends Command
      */
     public function handle()
     {
-        if (!$this->files->exists(base_path('cypress'))) {
+        if (!$this->isCypressInstalled()) {
             $this->requireCypressInstall();
+
+            return;
+        }
+
+        if (! $this->option('force') && $this->files->exists($this->cypressConfigPath())) {
+            $this->warn('Existing Cypress configuration file found. Please upgrade the file manually or overwrite changes using --force.');
 
             return;
         }
@@ -58,12 +65,14 @@ class CypressBoilerplateCommand extends Command
     {
         $this->files->copyDirectory(__DIR__ . '/stubs/support', $this->cypressPath('support'));
         $this->files->copyDirectory(__DIR__ . '/stubs/plugins', $this->cypressPath('plugins'));
+        $this->files->copyDirectory(__DIR__ . '/stubs/integration', $this->cypressPath('integration'));
 
         $this->lineBreak();
 
         $this->status('Updated', $this->cypressPath('support/index.js', false));
         $this->status('Updated', $this->cypressPath('plugins/index.js', false));
         $this->status('Created', $this->cypressPath('plugins/swap-env.js', false));
+        $this->status('Created', $this->cypressPath('integration/example.cy.js', false));
         $this->status('Created', $this->cypressPath('support/laravel-commands.js', false));
         $this->status('Created', $this->cypressPath('support/laravel-routes.js', false));
         $this->status('Created', $this->cypressPath('support/assertions.js', false));
@@ -81,43 +90,36 @@ class CypressBoilerplateCommand extends Command
     }
 
     /**
-     * Set the initial cypress.json configuration for the project.
+     * Set the initial cypress.config.js configuration for the project.
      */
     protected function createCypressConfig(): void
     {
         $config = [];
-        $configExists = $this->files->exists($this->cypressConfigPath());
-
-        if ($configExists) {
-            $config = json_decode($this->files->get($this->cypressConfigPath()), true);
-        }
 
         $this->files->put(
             $this->cypressConfigPath(),
-            json_encode($this->mergeCypressConfig($config), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            $this->defaultCypressConfig()
         );
 
-        $this->status($configExists ? 'Updated' : 'Created', $this->cypressConfigPath(false));
+        $this->status('Created', $this->cypressConfigPath(false));
     }
 
     /**
      * Merge the user's current cypress.json config with this package's recommended defaults.
      */
-    protected function mergeCypressConfig(array $config = []): array
+    protected function defaultCypressConfig(array $config = []): string
     {
-        return array_merge([
-            'baseUrl' => config('app.url'),
-            'chromeWebSecurity' => false,
-            'retries' => 2,
-            'defaultCommandTimeout' => 5000,
-            'watchForFileChanges' => true,
-            "integrationFolder" => $this->cypressPath('integration', false),
-            "pluginsFile" => $this->cypressPath('plugins/index.js', false),
-            "videosFolder" => $this->cypressPath('videos', false),
-            "supportFile" => $this->cypressPath('support/index.js', false),
-            "screenshotsFolder" => $this->cypressPath('screenshots', false),
-            "fixturesFolder" => $this->cypressPath('fixture', false)
-        ], $config);
+        return str_replace(
+            [
+                '%baseUrl%',
+                '%cypressPath%',
+            ],
+            [
+                config('app.url'),
+                $this->cypressPath('', false)
+            ],
+            $this->files->get(__DIR__ . '/stubs/cypress.config.js')
+        );
     }
 
     /**
@@ -164,9 +166,19 @@ class CypressBoilerplateCommand extends Command
 
 Cypress not found. Please install it through npm and try again.
 
-npm install cypress --save-dev && npx cypress open
+npm install cypress --save-dev
 
 EOT
         );
+    }
+
+    /**
+     * Check if Cypress is added to the package.json file.
+     */
+    protected function isCypressInstalled()
+    {
+        $package = json_decode($this->files->get(base_path('package.json')), true);
+
+        return Arr::get($package, 'devDependencies.cypress') || Arr::get($package, 'dependencies.cypress');
     }
 }

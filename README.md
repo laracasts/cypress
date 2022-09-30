@@ -20,11 +20,8 @@ If you'd prefer a more visual review of this package, [please watch this video](
 If you haven't already installed [Cypress](https://www.cypress.io/); that's your first step.
 
 ```bash
-npm install cypress --save-dev && npx cypress open
+npm install cypress --save-dev
 ```
-
-As part of the initial `npx cypress open` command, Cypress will instantly create a `./cypress` directory in your project root, 
-as well as a `cypress.json` configuration file.
 
 Now you're ready to install this package through Composer. Pull it in as a development-only dependency.
 
@@ -38,8 +35,17 @@ Finally, run the `cypress:boilerplate` command to copy over the initial boilerpl
 php artisan cypress:boilerplate
 ```
 
-That's it! You're ready to go. We've declared some initial settings in your project's `cypress.json` file. Have a look real quick and make sure 
-everything is in order. In particular, please ensure that the `baseUrl` property is set correctly (we default to your app's `APP_URL` environment setting).
+That's it! You're ready to go. We've provided an `example.cy.js` spec for you to play around with it. Let's run it now:
+
+```
+npx cypress open
+```
+
+In the Cypress window that opens, Choose "E2E Testing," and then "Start E2E Testing in Chrome." This will bring up a list of all specs in your application. Of course, at this point, we only have the single example spec. Click `example.cy.js` to run it. Wew! All green.
+
+## Cypress Configuration
+
+We've declared some initial settings in your project's `cypress.config.js` file. Have a quick look now to ensure that everything is in order. In particular, please ensure that the `baseUrl` property is set correctly (we default to your app's `APP_URL` environment setting).
 
 ## Environment Handling
 
