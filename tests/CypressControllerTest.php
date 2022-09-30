@@ -27,7 +27,7 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_fetches_a_collection_of_named_routes()
+    public function it_fetches_a_collection_of_named_routes()
     {
         Route::get('foo')->name('home');
 
