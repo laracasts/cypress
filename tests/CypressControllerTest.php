@@ -21,7 +21,7 @@ class CypressControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }
@@ -80,7 +80,7 @@ class CypressControllerTest extends TestCase
     {
         $this->post(route('cypress.login'), [
             'attributes' => ['name' => 'Frank'],
-            'state' => ['guest']
+            'state' => ['guest'],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'Frank']);
@@ -123,7 +123,7 @@ class CypressControllerTest extends TestCase
                 'name' => 'John Doe',
             ],
             'load' => ['profile'],
-            'state' => ['guest']
+            'state' => ['guest'],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
@@ -159,7 +159,7 @@ class CypressControllerTest extends TestCase
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'state' => ['guest' => 'forum']
+            'state' => ['guest' => 'forum'],
         ]);
 
         $this->assertEquals('forum', $response->json()['plan']);
@@ -167,7 +167,7 @@ class CypressControllerTest extends TestCase
         // When passing an array of arguments.
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'state' => ['guest' => ['forum']]
+            'state' => ['guest' => ['forum']],
         ]);
 
         $this->assertEquals('forum', $response->json()['plan']);
@@ -178,14 +178,14 @@ class CypressControllerTest extends TestCase
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'count' => 2
+            'count' => 2,
         ]);
 
         $this->assertCount(2, $response->json());
     }
 
     /** @test */
-    function it_makes_model_attributes_visible()
+    public function it_makes_model_attributes_visible()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
@@ -200,7 +200,7 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_makes_collection_model_attributes_visible()
+    public function it_makes_collection_model_attributes_visible()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
