@@ -27,22 +27,24 @@ class CypressController
 
     public function login(Request $request)
     {
+        $provider = $request->input('provider', 'users');
+        $guard = $request->input('guard');
         $attributes = $request->input('attributes', []);
 
         if (empty($attributes)) {
             $user = $this->factoryBuilder(
-                $this->userClassName(),
+                $this->userClassName($provider),
                 $request->input('state', [])
             )->create();
         } else {
-            $user = app($this->userClassName())
+            $user = app($this->userClassName($provider))
                 ->newQuery()
                 ->where($attributes)
                 ->first();
 
             if (!$user) {
                 $user = $this->factoryBuilder(
-                    $this->userClassName(),
+                    $this->userClassName($provider),
                     $request->input('state', [])
                 )->create($attributes);
             }
@@ -51,20 +53,20 @@ class CypressController
         $user->load($request->input('load', []));
 
         return tap($user, function ($user) {
-            auth()->login($user);
+            auth($guard)->login($user);
 
             $user->setHidden([])->setVisible([]);
         });
     }
 
-    public function currentUser()
+    public function currentUser(Request $request)
     {
-        return auth()->user()?->setHidden([])->setVisible([]);
+        return auth($request->input('guard'))->user()?->setHidden([])->setVisible([]);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        auth()->logout();
+        auth($request->input('guard'))->logout();
     }
 
     public function factory(Request $request)
@@ -114,9 +116,9 @@ class CypressController
         ]);
     }
 
-    protected function userClassName()
+    protected function userClassName($provider)
     {
-        return config('auth.providers.users.model');
+        return config("auth.providers.{$provider}.model");
     }
 
     protected function factoryBuilder($model, $states = [])
