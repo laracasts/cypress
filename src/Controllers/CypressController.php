@@ -52,7 +52,7 @@ class CypressController
 
         $user->load($request->input('load', []));
 
-        return tap($user, function ($user) {
+        return tap($user, function ($user) use ($guard) {
             auth($guard)->login($user);
 
             $user->setHidden([])->setVisible([]);
