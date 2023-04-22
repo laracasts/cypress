@@ -36,7 +36,7 @@ class CypressBoilerplateCommand extends Command
      */
     public function handle()
     {
-        if (!$this->isCypressInstalled()) {
+        if (! $this->isCypressInstalled()) {
             $this->requireCypressInstall();
 
             return;
@@ -63,9 +63,9 @@ class CypressBoilerplateCommand extends Command
      */
     protected function copyStubs(): void
     {
-        $this->files->copyDirectory(__DIR__ . '/stubs/support', $this->cypressPath('support'));
-        $this->files->copyDirectory(__DIR__ . '/stubs/plugins', $this->cypressPath('plugins'));
-        $this->files->copyDirectory(__DIR__ . '/stubs/integration', $this->cypressPath('integration'));
+        $this->files->copyDirectory(__DIR__.'/stubs/support', $this->cypressPath('support'));
+        $this->files->copyDirectory(__DIR__.'/stubs/plugins', $this->cypressPath('plugins'));
+        $this->files->copyDirectory(__DIR__.'/stubs/integration', $this->cypressPath('integration'));
 
         $this->lineBreak();
 
@@ -80,7 +80,7 @@ class CypressBoilerplateCommand extends Command
 
         $this->createCypressConfig();
 
-        if (!$this->files->exists($path = base_path('.env.cypress'))) {
+        if (! $this->files->exists($path = base_path('.env.cypress'))) {
             $this->files->copy(base_path('.env'), $path);
 
             $this->status('Created', '.env.cypress');
@@ -116,9 +116,9 @@ class CypressBoilerplateCommand extends Command
             ],
             [
                 config('app.url'),
-                $this->cypressPath('', false)
+                $this->cypressPath('', false),
             ],
-            $this->files->get(__DIR__ . '/stubs/cypress.config.js')
+            $this->files->get(__DIR__.'/stubs/cypress.config.js')
         );
     }
 
@@ -129,7 +129,7 @@ class CypressBoilerplateCommand extends Command
     {
         $cypressPath = $absolute ? base_path($this->cypressPath) : $this->cypressPath;
 
-        return $cypressPath . ($path ? DIRECTORY_SEPARATOR . $path : '');
+        return $cypressPath.($path ? DIRECTORY_SEPARATOR.$path : '');
     }
 
     /**
