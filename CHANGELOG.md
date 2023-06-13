@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1 - 2023-02-16
+
+- Adds support for Laravel 10
+
 ## 3.0.0 - 2022-06-27
 
 - Adds support for Cypress 10. [Please review the Cypress changelog](https://docs.cypress.io/guides/references/changelog#10-0-0) for details.
