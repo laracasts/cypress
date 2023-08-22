@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress';
+import plugins from './%cypressPath%/plugins/index.js';
 
 export default defineConfig({
     chromeWebSecurity: false,
@@ -10,7 +11,7 @@ export default defineConfig({
     fixturesFolder: '%cypressPath%/fixture',
     e2e: {
         setupNodeEvents(on, config) {
-            return require('./%cypressPath%/plugins/index.js')(on, config)
+            return plugins(on, config)
         },
         baseUrl: '%baseUrl%',
         specPattern: '%cypressPath%/integration/**/*.cy.{js,jsx,ts,tsx}',
