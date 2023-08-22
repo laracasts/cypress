@@ -11,7 +11,7 @@ class CypressBoilerplateCommand extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'cypress:boilerplate { --config-path=cypress.config.js } { --force : Recreate existing configuration file }';
+    protected $signature = 'cypress:boilerplate { --config-path=cypress.config.cjs } { --force : Recreate existing configuration file }';
 
     /**
      * The console command description.
@@ -90,7 +90,7 @@ class CypressBoilerplateCommand extends Command
     }
 
     /**
-     * Set the initial cypress.config.js configuration for the project.
+     * Set the initial cypress.config.cjs configuration for the project.
      */
     protected function createCypressConfig(): void
     {
@@ -118,7 +118,7 @@ class CypressBoilerplateCommand extends Command
                 config('app.url'),
                 $this->cypressPath('', false)
             ],
-            $this->files->get(__DIR__ . '/stubs/cypress.config.js')
+            $this->files->get(__DIR__ . '/stubs/cypress.config.cjs')
         );
     }
 

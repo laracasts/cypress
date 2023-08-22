@@ -45,7 +45,7 @@ In the Cypress window that opens, Choose "E2E Testing," and then "Start E2E Test
 
 ## Cypress Configuration
 
-We've declared some initial settings in your project's `cypress.config.js` file. Have a quick look now to ensure that everything is in order. In particular, please ensure that the `baseUrl` property is set correctly (we default to your app's `APP_URL` environment setting).
+We've declared some initial settings in your project's `cypress.config.cjs` file. Have a quick look now to ensure that everything is in order. In particular, please ensure that the `baseUrl` property is set correctly (we default to your app's `APP_URL` environment setting).
 
 ## Environment Handling
 
