@@ -340,6 +340,24 @@ test('it loads the team dashboard page using a named route', () => {
     });
 });
 ```
+There is also a wrapper command available called `cy.visitRoute()` which can be used to simplify the boilerplate in the above examples.
+
+```js
+test('it loads the about page using a named route', () => {
+    cy.visitRoute('about');
+});
+```
+
+and 
+
+
+```js
+test('it loads the team dashboard page using a named route', () => {
+    cy.visitRoute('team.dashboard', {
+        parameters: { team: 1 }
+    });
+});
+```
 
 Should you need to access the full list of routes for your application, use the `Cypress.Laravel.routes` property.
 
