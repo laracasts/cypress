@@ -2,6 +2,7 @@
 
 namespace Laracasts\Cypress\Tests;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Laracasts\Cypress\CypressServiceProvider;
@@ -20,13 +21,13 @@ class CypressControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
 
         config(['auth.providers.users.model' => TestUser::class]);
     }
 
     /** @test */
-    function it_fetches_a_collection_of_named_routes()
+    public function it_fetches_a_collection_of_named_routes()
     {
         Route::get('foo')->name('home');
 
@@ -79,7 +80,7 @@ class CypressControllerTest extends TestCase
     {
         $this->post(route('cypress.login'), [
             'attributes' => ['name' => 'Frank'],
-            'state' => ['guest']
+            'state' => ['guest'],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'Frank']);
@@ -122,7 +123,29 @@ class CypressControllerTest extends TestCase
                 'name' => 'John Doe',
             ],
             'load' => ['profile'],
-            'state' => ['guest']
+            'state' => ['guest'],
+        ]);
+
+        $this->assertDatabaseHas('users', ['name' => 'John Doe']);
+        $this->assertEquals('John Doe', $response->json()['name']);
+        $this->assertEquals('USA', $response->json()['profile']['location']);
+        $this->assertEquals('guest', $response->json()['plan']);
+    }
+
+    /** @test */
+    public function it_builds_a_model_factory_by_its_morph_name()
+    {
+        Relation::morphMap([
+            'test_user' => TestUser::class,
+        ]);
+
+        $response = $this->post(route('cypress.factory'), [
+            'model' => 'test_user',
+            'attributes' => [
+                'name' => 'John Doe',
+            ],
+            'load' => ['profile'],
+            'state' => ['guest'],
         ]);
 
         $this->assertDatabaseHas('users', ['name' => 'John Doe']);
@@ -136,7 +159,7 @@ class CypressControllerTest extends TestCase
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'state' => ['guest' => 'forum']
+            'state' => ['guest' => 'forum'],
         ]);
 
         $this->assertEquals('forum', $response->json()['plan']);
@@ -144,7 +167,7 @@ class CypressControllerTest extends TestCase
         // When passing an array of arguments.
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'state' => ['guest' => ['forum']]
+            'state' => ['guest' => ['forum']],
         ]);
 
         $this->assertEquals('forum', $response->json()['plan']);
@@ -155,14 +178,14 @@ class CypressControllerTest extends TestCase
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
-            'count' => 2
+            'count' => 2,
         ]);
 
         $this->assertCount(2, $response->json());
     }
 
     /** @test */
-    function it_makes_model_attributes_visible()
+    public function it_makes_model_attributes_visible()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
@@ -177,7 +200,7 @@ class CypressControllerTest extends TestCase
     }
 
     /** @test */
-    function it_makes_collection_model_attributes_visible()
+    public function it_makes_collection_model_attributes_visible()
     {
         $response = $this->post(route('cypress.factory'), [
             'model' => TestUser::class,
