@@ -10,7 +10,7 @@ Cypress.Laravel = {
         return ((uri) => {
             Object.keys(parameters).forEach((parameter) => {
                 uri = uri.replace(
-                    new RegExp(`{${parameter}}`),
+                    new RegExp(`{${parameter}[^}]*}`),
                     parameters[parameter]
                 );
             });
