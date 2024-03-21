@@ -39,7 +39,7 @@ declare namespace Cypress {
          * Fetch a fresh list of URI routes from the server.
          *
          * @example
-         * cy.logout()
+         * cy.refreshRoutes()
          */
         refreshRoutes(): Chainable<any>;
 
