@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.03 - 2025-02-27
+
+- Adds support for Laravel 12
+
 ## 3.0.1 - 2023-02-16
 
 - Adds support for Laravel 10
