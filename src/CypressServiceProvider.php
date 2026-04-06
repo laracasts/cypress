@@ -30,6 +30,7 @@ class CypressServiceProvider extends ServiceProvider
     {
         Route::namespace('')
             ->middleware('web')
+            ->withoutMiddleware('auth')
             ->group(__DIR__.'/routes/cypress.php');
     }
 }
