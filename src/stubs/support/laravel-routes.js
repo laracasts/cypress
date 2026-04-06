@@ -12,6 +12,10 @@ Cypress.Laravel = {
                 uri = uri.replace(
                     new RegExp(`{${parameter}}`),
                     parameters[parameter]
+                )
+                .replace(
+                    /\/{[a-zA-Z]+[?]}/,
+                    ''
                 );
             });
 
