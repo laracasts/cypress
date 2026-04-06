@@ -5,11 +5,13 @@
  *
  * @example cy.login();
  *          cy.login({ name: 'JohnDoe' });
+ *          cy.login({ name: 'JohnDoe' });
  *          cy.login({ attributes: { name: 'JohnDoe' }, state: 'guest', load: ['comments] });
+ *          cy.login({ attributes: { name: 'JohnDoe' }, provider: 'users', guard: 'custom-guard' });
  */
 Cypress.Commands.add('login', (attributes = {}) => {
     // Are we using the new object system.
-    let requestBody = attributes.attributes || attributes.state || attributes.load ? attributes : { attributes };
+    let requestBody = (attributes.attributes || attributes.state || attributes.load) ? attributes : { attributes };
 
     return cy
         .csrfToken()
