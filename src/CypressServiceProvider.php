@@ -9,7 +9,17 @@ class CypressServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        if ($this->app->environment('production')) {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/cypress.php', 'cypress'
+        );
+
+        $excludedEnvironments = config('cypress.exclude');
+        if (is_string($excludedEnvironments)) {
+            $excludedEnvironments = explode(',', $excludedEnvironments);
+        }
+        $excludedEnvironments[] = 'production';
+
+        if ($this->app->environment($excludedEnvironments)) {
             return;
         }
 
