@@ -11,6 +11,7 @@ class TestUser extends Authenticatable
     use HasFactory;
 
     protected $table = 'users';
+
     protected $hidden = ['plan'];
 
     protected static function booted()

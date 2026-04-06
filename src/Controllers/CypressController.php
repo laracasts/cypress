@@ -3,10 +3,10 @@
 namespace Laracasts\Cypress\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 
 class CypressController
 {
@@ -40,7 +40,7 @@ class CypressController
                 ->where($attributes)
                 ->first();
 
-            if (!$user) {
+            if (! $user) {
                 $user = $this->factoryBuilder(
                     $this->userClassName(),
                     $request->input('state', [])
@@ -75,7 +75,7 @@ class CypressController
         )
             ->count(intval($request->input('count', 1)))
             ->create($request->input('attributes'))
-            ->each(fn($model) => $model->setHidden([])->setVisible([]))
+            ->each(fn ($model) => $model->setHidden([])->setVisible([]))
             ->load($request->input('load', []))
             ->pipe(function ($collection) {
                 return $collection->count() > 1
@@ -105,8 +105,8 @@ class CypressController
             $code .= ';';
         }
 
-        if (!Str::contains($code, 'return')) {
-            $code = 'return ' . $code;
+        if (! Str::contains($code, 'return')) {
+            $code = 'return '.$code;
         }
 
         return response()->json([

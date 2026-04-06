@@ -42,6 +42,6 @@ class UserFactory extends Factory
 
     public function guest($plan = 'guest')
     {
-        return $this->state(fn() => ['plan' => $plan]);
+        return $this->state(fn () => ['plan' => $plan]);
     }
 }
