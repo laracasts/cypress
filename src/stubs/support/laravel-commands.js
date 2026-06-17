@@ -16,6 +16,10 @@ Cypress.Commands.add('login', (attributes = {}) => {
         .then((token) => {
             return cy.request({
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: '/__cypress__/login',
                 body: { ...requestBody, _token: token },
                 log: false,
@@ -43,6 +47,10 @@ Cypress.Commands.add('currentUser', () => {
         return cy
             .request({
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: '/__cypress__/current-user',
                 body: { _token: token },
                 log: false,
@@ -71,6 +79,10 @@ Cypress.Commands.add('logout', () => {
         .then((token) => {
             return cy.request({
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: '/__cypress__/logout',
                 body: { _token: token },
                 log: false,
@@ -90,6 +102,9 @@ Cypress.Commands.add('csrfToken', () => {
     return cy
         .request({
             method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
             url: '/__cypress__/csrf_token',
             log: false,
         })
@@ -106,6 +121,10 @@ Cypress.Commands.add('refreshRoutes', () => {
         return cy
             .request({
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: '/__cypress__/routes',
                 body: { _token: token },
                 log: false,
@@ -188,6 +207,10 @@ Cypress.Commands.add('create', (model, count = 1, attributes = {}, load = [], st
         .then((token) => {
             return cy.request({
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: '/__cypress__/factory',
                 body: { ...requestBody, _token: token },
                 log: false,
@@ -264,6 +287,10 @@ Cypress.Commands.add('artisan', (command, parameters = {}, options = {}) => {
     return cy.csrfToken().then((token) => {
         return cy.request({
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
             url: '/__cypress__/artisan',
             body: { command: command, parameters: parameters, _token: token },
             log: false,
@@ -285,6 +312,10 @@ Cypress.Commands.add('php', (command) => {
         .then((token) => {
             return cy.request({
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 url: '/__cypress__/run-php',
                 body: { command: command, _token: token },
                 log: false,
